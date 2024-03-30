@@ -13,6 +13,7 @@ export default defineConfig({
   theme: {
     extend: {
       colors: {
+        primary: '#00C16A',
         green: {
           50: '#EFFDF5',
           100: '#D9FBE8',
