@@ -9,8 +9,6 @@
     <img src="./public/thumbnail.png">
 </p>
 
-
-
 # Modules
 
 ---
