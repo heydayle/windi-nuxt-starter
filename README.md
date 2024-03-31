@@ -1,14 +1,13 @@
 
-<div>
-    <img src="./public/logo.svg" style="display: block;margin: auto">
-</div>
+<p align="center">
+  <img src="./public/logo.svg">
+</p>
 
 ---
 
-
-<div>
-    <img src="./public/thumbnail.png" style="display: block;margin: auto">
-</div>
+<p align="center">
+    <img src="./public/thumbnail.png">
+</p>
 
 
 
