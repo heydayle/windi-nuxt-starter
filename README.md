@@ -1,4 +1,28 @@
-# Nuxt 3 Minimal Starter
+
+<div>
+    <img src="./public/logo.svg" style="display: block;margin: auto">
+</div>
+
+---
+
+
+<div>
+    <img src="./public/thumbnail.png" style="display: block;margin: auto">
+</div>
+
+
+
+# Modules
+
+---
+
+- [Nuxt 3](https://nuxt.com/) - SSR, ESR, Auto import, Modules, ETC
+- [Vite](https://vitejs.dev/) - Instant HMR
+- [Tailwindcss](https://www.tailwindcss.com/) - A utility-first CSS framework for rapid UI development.
+- [Nuxt UI](https://ui.nuxt.com/) - A UI Library for Modern Web Apps
+- [Pinia](https://pinia.vuejs.org/) - The Vue Store that you will enjoy using
+- Composition API - Script setup
+- Typescript
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
