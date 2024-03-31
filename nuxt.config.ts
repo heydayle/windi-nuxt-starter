@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     // ui
     '@nuxt/ui',
-    'nuxt-windicss',
+    '@nuxtjs/tailwindcss',
     // svg icon
     'nuxt-svgo',
     // locales

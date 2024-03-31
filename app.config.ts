@@ -2,9 +2,23 @@ export default defineAppConfig({
   ui: {
     primary: 'green',
     gray: 'cool',
+    icons: {
+      dynamic: true,
+    },
   },
   winduxt: {
-    host: 'Winduxt',
+    host: 'Winuxt',
+    project: {
+      github: 'https://github.com/heydayle/windi-nuxt-starter',
+    },
+    author: {
+      name: 'Heyday Lê',
+      links: {
+        github: 'https://github.com/heydayle',
+        website: 'https://thinh.io.vn',
+        linkedin: 'https://www.linkedin.com/in/thinhle99',
+      },
+    },
     layout: {
       header: {
         navbar: {
@@ -22,6 +36,15 @@ export default defineAppConfig({
             },
           ],
         },
+      },
+      footer: {
+        author: 'Heyday Lê',
+        years: '2024',
+      },
+    },
+    page: {
+      welcome: {
+        title: 'Windy Nuxt Starter',
       },
     },
   },

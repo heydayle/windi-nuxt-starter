@@ -17,7 +17,10 @@
     "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
     "@nuxt/ui": "^2.15.0",
     "@pinia/nuxt": "^0.5.1",
+    "@vueuse/core": "^10.5.0",
+    "@vueuse/nuxt": "^10.5.0",
     "nuxt": "^3.11.1",
+    "tailwindcss": "^3.4.3",
     "typescript": "^5.4.3",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
@@ -26,6 +29,7 @@
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
     "@nuxtjs/i18n": "^8.2.0",
+    "@nuxtjs/tailwindcss": "^6.11.4",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
     "eslint": "^8.57.0",
