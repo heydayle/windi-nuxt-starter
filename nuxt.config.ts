@@ -15,7 +15,11 @@ export default defineNuxtConfig({
     'nuxt-svgo',
     // locales
     '@nuxtjs/i18n',
+    'nuxt-tiptap-editor',
   ],
+  tiptap: {
+    prefix: "Tiptap",
+  },
   i18n: {
     // langDir: '~/locales/',
     locales: ['en', 'vi'],
