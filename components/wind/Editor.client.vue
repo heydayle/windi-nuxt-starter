@@ -21,7 +21,7 @@ const { x, y, style } = useDraggable(refEditor, {
 </script>
 <template>
   <div class="relative h-screen">
-    <div ref="refEditor" :style="style" class="fixed w-40">
+    <div ref="refEditor" :style="style" class="fixed w-60">
       <div class="space-x-2 mb-4">
         <UButton
           @click="editor?.chain().focus().toggleBold().run()"
@@ -55,7 +55,7 @@ const { x, y, style } = useDraggable(refEditor, {
 <style lang="scss">
 .tiptap-element {
   .tiptap {
-    @apply px-4 py-2 active:outline-0 focus:outline-0;
+    @apply px-4 py-2 active:outline-0 focus:outline-0 h-60;
   }
 }
 </style>
