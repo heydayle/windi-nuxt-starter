@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Moveable from 'vue3-moveable'
 import { ref } from 'vue'
-import { onClickOutside } from '@vueuse/core'
 import Underline from '@tiptap/extension-underline'
 useSeoMeta({
   title: 'Moving editor',
@@ -13,10 +12,7 @@ const props = defineProps<{
   id: string | number
   activeId: string | number
 }>()
-const emits = defineEmits([
-  'update:activeId',
-  'clickOutside'
-])
+const emits = defineEmits(['update:activeId', 'clickOutside'])
 const editor = useEditor({
   content: props.content,
   extensions: [TiptapStarterKit, Underline],
@@ -47,7 +43,7 @@ const onDrag = (e) => {
 }
 const onResize = (e) => {
   e.target.style.width = `${e.width}px`
-  e.target.style.height = `auto`
+  e.target.style.height = 'auto'
   e.target.style.transform = e.drag.transform
 }
 const onBound = (e) => {
@@ -58,15 +54,19 @@ const onDbClick = () => {
     resizable.value = false
     editor.value.commands.focus('end')
   }
-
 }
-const onClick = () => {
-  emits('update:activeId', props.id)
-  resizable.value = props.activeId === props.id
+const onClick = (id) => {
+  emits('update:activeId', id)
+  setTimeout(() => {
+    resizable.value = props.activeId === props.id
+  })
 }
+const active = computed(() => props.activeId)
+watch(active, () => {
+  resizable.value = active.value === props.id
+})
 const onClickOutside = () => {
-  onClick()
-  emits('update:activeId', '')
+  onClick(-1)
 }
 defineExpose({ onClickOutside })
 </script>
@@ -78,7 +78,7 @@ defineExpose({ onClickOutside })
         class="target absolute min-w-fit min-h-10 h-fit"
         :style="{ left: x + 'px', top: y + 'px' }"
         @dblclick.stop="onDbClick"
-        @click.stop="onClick"
+        @click.stop="onClick(id)"
       >
         <div class="space-x-2 mb-4 min-w-60 absolute -top-10">
           <UButton
@@ -109,7 +109,11 @@ defineExpose({ onClickOutside })
         />
       </div>
       <Moveable
-        :ref="el => { dynamicRef[id] = el }"
+        :ref="
+          (el) => {
+            dynamicRef[id] = el
+          }
+        "
         :target="targetRef"
         v-bind="{
           draggable,
@@ -135,7 +139,7 @@ defineExpose({ onClickOutside })
   .tiptap {
     @apply px-4 py-2 active:outline-0 focus:outline-0 h-full text-center flex flex-col justify-center items-center;
   }
-  @apply h-auto
+  @apply h-auto;
 }
 .moveable-control-box {
   .moveable-origin {
