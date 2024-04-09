@@ -26,6 +26,9 @@ dependencies:
   '@tiptap/extension-text':
     specifier: ^2.2.6
     version: 2.2.6(@tiptap/core@2.2.6)
+  '@tiptap/extension-underline':
+    specifier: ^2.2.6
+    version: 2.2.6(@tiptap/core@2.2.6)
   '@vueuse/components':
     specifier: ^10.9.0
     version: 10.9.0(vue@3.4.21)
@@ -2410,6 +2413,14 @@ packages:
       '@tiptap/core': ^2.0.0
     dependencies:
       '@tiptap/core': 2.2.6(@tiptap/pm@2.2.6)
+
+  /@tiptap/extension-underline@2.2.6(@tiptap/core@2.2.6):
+    resolution: {integrity: sha512-RaYEWuBHS6VQ2KXk+pP2b3xDN4vxmTb7+CF84mumR+CJUK4uAx01IDBUof+h/a4Sa58suNLQ6eHY33NmxPppnQ==}
+    peerDependencies:
+      '@tiptap/core': ^2.0.0
+    dependencies:
+      '@tiptap/core': 2.2.6(@tiptap/pm@2.2.6)
+    dev: false
 
   /@tiptap/pm@2.2.6:
     resolution: {integrity: sha512-gSKJtsaMLiYNwcAdwgnlTVM9zHiHy6/WgJvXFmIoOnUgvMN10Bbr+KO5hoffwgLCCSpIWw6qJoVKMpHBexLm0w==}
