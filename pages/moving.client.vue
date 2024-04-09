@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { get, set } from '@vueuse/core'
+import { get, set, useActiveElement } from '@vueuse/core'
+import { UseMouseInElement, UseActiveElement } from '@vueuse/components'
 useSeoMeta({
   title: 'Moving editor',
 })
@@ -10,12 +11,12 @@ interface IEditor {
 }
 const editorList = ref<IEditor[]>([
   {
-    x: 40,
+    x: 800,
     y: 150,
     content: '<p>Hello</p>',
   },
   {
-    x: 300,
+    x: 400,
     y: 150,
     content: '<p>I\'m Nuxt</p>',
   },
@@ -25,8 +26,8 @@ const getRandomInt = (max: number = 1) => {
 }
 const createEditor = () => {
   const position = {
-    x: getRandomInt(window.innerWidth - 100),
-    y: getRandomInt(window.innerHeight - 40),
+    x: getRandomInt(window.innerWidth - 600),
+    y: getRandomInt(window.innerHeight - 70),
   }
   const newE = {
     ...position,
@@ -36,16 +37,25 @@ const createEditor = () => {
 }
 </script>
 <template>
-  <div>
+  <div class="h-screen overflow-hidden">
     <UButton @click="createEditor">
       <Icon name="mdi:plus" />
     </UButton>
-    <WindEditor
-      v-for="(editor, index) in editorList"
-      :key="index"
-      v-bind="{
-        ...editor,
-      }"
-    />
+    <UseMouseInElement
+      v-slot="{ elementX, elementY, isOutside }"
+      class="h-screen relative"
+    >
+      {{ elementX }}
+      {{ elementY }}
+      {{ isOutside }}
+      <WindEditor
+        v-for="(editor, index) in editorList"
+        :key="index"
+        :data-id="index"
+        v-bind="{
+          ...editor,
+        }"
+      />
+    </UseMouseInElement>
   </div>
 </template>

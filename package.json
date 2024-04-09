@@ -17,6 +17,11 @@
     "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
     "@nuxt/ui": "^2.15.0",
     "@pinia/nuxt": "^0.5.1",
+    "@tiptap/extension-document": "^2.2.6",
+    "@tiptap/extension-heading": "^2.2.6",
+    "@tiptap/extension-paragraph": "^2.2.6",
+    "@tiptap/extension-text": "^2.2.6",
+    "@vueuse/components": "^10.9.0",
     "@vueuse/core": "^10.5.0",
     "@vueuse/nuxt": "^10.5.0",
     "nuxt": "^3.11.1",
@@ -24,7 +29,8 @@
     "typescript": "^5.4.3",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0",
-    "vue-sonner": "^1.1.2"
+    "vue-sonner": "^1.1.2",
+    "vue3-moveable": "^0.28.0"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
