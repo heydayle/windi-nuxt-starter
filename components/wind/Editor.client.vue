@@ -49,7 +49,10 @@ const onResize = (e: any) => {
 const onBound = (e) => {
   // console.log(e)
 }
+const isFocused = ref(false)
 const onDbClick = () => {
+  if (isFocused.value) return
+  isFocused.value = true
   resizable.value = false
   editor.value?.commands.focus('end')
 }
@@ -57,6 +60,7 @@ const onClick = (id: string | number) => {
   emits('update:activeId', id)
   if (id !== props.activeId) {
     editor.value?.commands.blur()
+    isFocused.value = false
   }
   setTimeout(() => {
     resizable.value = props.activeId === props.id
