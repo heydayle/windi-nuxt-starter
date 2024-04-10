@@ -2,6 +2,7 @@
 import Moveable from 'vue3-moveable'
 import { ref } from 'vue'
 import Underline from '@tiptap/extension-underline'
+import { useIntervalFn } from '@vueuse/core'
 useSeoMeta({
   title: 'Moving editor',
 })
@@ -11,6 +12,7 @@ const props = defineProps<{
   content: string
   id: string
   activeId: string | number
+  gravity: boolean
 }>()
 const emits = defineEmits([
   'update:activeId',
@@ -18,6 +20,7 @@ const emits = defineEmits([
   'remove',
   'update:x',
   'update:y',
+  'disabledGravity',
 ])
 const editor = useEditor({
   content: props.content,
@@ -56,10 +59,12 @@ const moveableStyle = reactive({
 })
 const onDrag = (e: any) => {
   const rotate = e.transform.match(/rotate\((.+)\)/)
-  if (rotate && rotate.length)
-    e.target.style.transform = `rotate(${rotate[1]})`
+  if (rotate && rotate.length) e.target.style.transform = `rotate(${rotate[1]})`
   emits('update:x', e.left)
   emits('update:y', e.top)
+  editor.value?.commands?.setContent(
+    `x: ${Math.round(e.left)}, y: ${Math.round(e.top)}`,
+  )
 }
 const onResize = (e: any) => {
   e.target.style.width = `${e.width}px`
@@ -137,6 +142,28 @@ watch(
       value > editorStyle.height ? editorStyle.height : value
   },
 )
+onMounted(() => {
+  pause()
+  emits('disabledGravity')
+})
+const { pause, resume, isActive } = useIntervalFn(() => {
+  emits('update:y', props.y + 1.2)
+  moveableRef.value?.request(
+    'draggable',
+    {
+      y: props.y + 1.2,
+    },
+    true,
+  )
+}, 1)
+watch(
+  () => props.gravity,
+  (value) => {
+    if (value) {
+      resume()
+    } else pause()
+  },
+)
 defineExpose({ onClickOutside })
 </script>
 <template>
@@ -144,7 +171,7 @@ defineExpose({ onClickOutside })
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
-        class="target absolute min-w-40 min-h-10 h-fit"
+        class="target absolute min-w-60 min-h-10 h-fit"
         :class="isFocused ? 'cursor-text' : 'cursor-move'"
         :style="{
           left: x + 'px',

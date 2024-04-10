@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { get, set } from '@vueuse/core'
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'
 useSeoMeta({
   title: 'Moving editor',
 })
@@ -62,13 +62,30 @@ const onRemoveEditor = (id: string) => {
 const onClickOutside = () => {
   dynamicRef.value.forEach((e) => e?.onClickOutside())
 }
+const gravity = ref<boolean>(false)
+const onSetGravity = () => {
+  set(gravity, !get(gravity))
+}
+const onClear = () => {
+  set(editorList, [])
+}
 </script>
 <template>
-  <div class="relative h-screen max-w-screen-2xl" @click="onClickOutside">
-    <UButton @click="createEditor">
-      Create editor
-      <Icon name="mdi:plus" />
-    </UButton>
+  <div
+    class="relative h-screen max-w-screen-2xl overflow-hidden"
+    @click="onClickOutside"
+  >
+    <div class="flex">
+      <UButton icon="mdi:plus" @click="createEditor"> Create </UButton>
+      <UButton
+        :color="gravity ? 'primary' : 'white'"
+        class="ml-4"
+        @click="onSetGravity"
+      >
+        Gravity
+      </UButton>
+      <UButton class="ml-4" @click="onClear"> Clear </UButton>
+    </div>
     <WindEditor
       v-for="(editor, index) in editorList"
       :ref="
@@ -78,13 +95,15 @@ const onClickOutside = () => {
       "
       :key="index"
       v-model:activeId="activeId"
-      v-model:x="editor.x"
-      v-model:y="editor.y"
       v-bind="{
         ...editor,
+        gravity,
       }"
+      v-model:x="editor.x"
+      v-model:y="editor.y"
       @click-outside="onClickOutside"
       @remove="onRemoveEditor"
+      @disabledGravity="gravity = false"
     />
   </div>
 </template>
