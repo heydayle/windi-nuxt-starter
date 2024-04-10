@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { get, set } from '@vueuse/core'
+import { get, set, useElementSize } from '@vueuse/core'
 import { v4 as uuidv4 } from 'uuid'
 useSeoMeta({
   title: 'Moving editor',
 })
+definePageMeta({ layout: 'area' })
 interface IEditor {
   id: string
   x: number
@@ -44,6 +45,7 @@ const getRandomInt = (max: number = 1) => {
   return Math.floor(Math.random() * max)
 }
 const createEditor = () => {
+  console.log(123)
   const position = {
     x: getRandomInt(window.innerWidth - 600),
     y: getRandomInt(window.innerHeight - 70),
@@ -57,7 +59,10 @@ const createEditor = () => {
 }
 const onRemoveEditor = (id: string) => {
   const newList = [...editorList.value.filter((e: IEditor) => e.id !== id)]
-  set(editorList, newList)
+  set(editorList, [])
+  setTimeout(() => {
+    set(editorList, newList)
+  })
 }
 const onClickOutside = () => {
   dynamicRef.value.forEach((e) => e?.onClickOutside())
@@ -69,10 +74,13 @@ const onSetGravity = () => {
 const onClear = () => {
   set(editorList, [])
 }
+const areaRef = ref(null)
+const heightArea = computed(() => useElementSize(areaRef)?.height.value)
 </script>
 <template>
   <div
-    class="relative h-screen max-w-screen-2xl overflow-hidden"
+    ref="areaRef"
+    class="relative h-[calc(100vh-70px)] max-w-screen-2xl overflow-hidden z-10"
     @click="onClickOutside"
   >
     <div class="flex">
@@ -98,12 +106,13 @@ const onClear = () => {
       v-bind="{
         ...editor,
         gravity,
+        heightArea,
       }"
       v-model:x="editor.x"
       v-model:y="editor.y"
       @click-outside="onClickOutside"
       @remove="onRemoveEditor"
-      @disabledGravity="gravity = false"
+      @disabled-gravity="gravity = false"
     />
   </div>
 </template>

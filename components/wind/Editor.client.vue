@@ -13,6 +13,7 @@ const props = defineProps<{
   id: string
   activeId: string | number
   gravity: boolean
+  heightArea: number
 }>()
 const emits = defineEmits([
   'update:activeId',
@@ -85,7 +86,6 @@ const onDbClick = () => {
   editor.value?.commands.focus('end')
 }
 const onClick = (id: string | number) => {
-  console.log(id)
   emits('update:activeId', id)
   if (id !== props.activeId) {
     editor.value?.commands.blur()
@@ -142,28 +142,27 @@ watch(
       value > editorStyle.height ? editorStyle.height : value
   },
 )
-onMounted(() => {
-  pause()
-  emits('disabledGravity')
-})
 const { pause, resume, isActive } = useIntervalFn(() => {
-  emits('update:y', props.y + 1.2)
+  emits('update:y', props.y + 0.98)
   moveableRef.value?.request(
     'draggable',
     {
-      y: props.y + 1.2,
+      y: props.y + 0.98,
     },
     true,
   )
 }, 1)
+onMounted(() => {
+  // pause()
+  emits('disabledGravity')
+})
 watch(
   () => props.gravity,
   (value) => {
     if (value) {
       resume()
     } else pause()
-  },
-)
+  }, { immediate: true })
 defineExpose({ onClickOutside })
 </script>
 <template>
