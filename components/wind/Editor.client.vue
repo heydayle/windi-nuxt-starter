@@ -2,6 +2,7 @@
 import Moveable from 'vue3-moveable'
 import { ref } from 'vue'
 import Underline from '@tiptap/extension-underline'
+import moveable from 'vue3-moveable/src/components/Moveable.vue'
 useSeoMeta({
   title: 'Moving editor',
 })
@@ -36,27 +37,27 @@ const bounds = {
 }
 const edge = []
 const targetRef = ref(null)
-const dynamicRef = ref({})
-const moveableRef = computed(() => dynamicRef.value[props.id])
-const onDrag = (e) => {
+const moveableRef = ref(null)
+const onDrag = (e: any) => {
   e.target.style.transform = e.transform
 }
-const onResize = (e) => {
+const onResize = (e: any) => {
   e.target.style.width = `${e.width}px`
-  e.target.style.height = 'auto'
-  e.target.style.transform = e.drag.transform
+  e.target.style.height = `${e.height}px`
+  e.target.style.transform = e?.drag?.transform
 }
 const onBound = (e) => {
   // console.log(e)
 }
 const onDbClick = () => {
-  if (props.activeId !== props.id) {
-    resizable.value = false
-    editor.value.commands.focus('end')
-  }
+  resizable.value = false
+  editor.value?.commands.focus('end')
 }
-const onClick = (id) => {
+const onClick = (id: string | number) => {
   emits('update:activeId', id)
+  if (id !== props.activeId) {
+    editor.value?.commands.blur()
+  }
   setTimeout(() => {
     resizable.value = props.activeId === props.id
   })
@@ -68,6 +69,22 @@ watch(active, () => {
 const onClickOutside = () => {
   onClick(-1)
 }
+const contents = computed(() => editor.value?.getHTML())
+watch(
+  contents,
+  () => {
+    const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
+    moveableRef.value?.request(
+      'resizable',
+      {
+        offsetWidth: elTipTap?.offsetWidth,
+        offsetHeight: elTipTap?.offsetHeight,
+      },
+      true,
+    )
+  },
+  { deep: true },
+)
 defineExpose({ onClickOutside })
 </script>
 <template>
@@ -75,7 +92,7 @@ defineExpose({ onClickOutside })
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
-        class="target absolute min-w-fit min-h-10 h-fit"
+        class="target absolute min-w-40 min-h-10 h-fit"
         :style="{ left: x + 'px', top: y + 'px' }"
         @dblclick.stop="onDbClick"
         @click.stop="onClick(id)"
@@ -105,15 +122,13 @@ defineExpose({ onClickOutside })
         </div>
         <TiptapEditorContent
           class="tiptap-element h-full active:outline-0 focus:outline-0"
+          :class="`tiptap-element-${id}`"
           :editor="editor"
         />
       </div>
       <Moveable
-        :ref="
-          (el) => {
-            dynamicRef[id] = el
-          }
-        "
+        ref="moveableRef"
+        :class="'moveable-' + id"
         :target="targetRef"
         v-bind="{
           draggable,

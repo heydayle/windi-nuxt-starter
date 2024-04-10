@@ -42,13 +42,12 @@ watch(activeId, (value) => {
   console.log(value)
 })
 const onClickOutside = () => {
-  console.log(dynamicRef.value[1])
-  dynamicRef.value.forEach(e => e?.onClickOutside())
+  dynamicRef.value.forEach((e) => e?.onClickOutside())
 }
 </script>
 <template>
   <div
-    class="h-screen max-w-screen-2xl overflow-hidden"
+    class="relative h-screen max-w-screen-2xl overflow-hidden"
     @click="onClickOutside"
   >
     <UButton @click="createEditor">
