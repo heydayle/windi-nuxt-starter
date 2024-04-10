@@ -34,6 +34,11 @@ export default defineAppConfig({
               title: 'install',
               to: { name: 'install', path: '/install' },
             },
+            {
+              type: 'link',
+              title: 'Movable Editor',
+              to: { name: 'Moving', path: '/moving' },
+            },
           ],
         },
       },

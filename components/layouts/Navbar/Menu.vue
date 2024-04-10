@@ -9,7 +9,7 @@ const menus = computed(() => winduxt.layout.header.navbar.menus)
       v-for="(item, index) in menus"
       :key="index"
       :to="localePath(item.to.path)"
-      active-class="text-primary"
+      active-class="text-primary border-b border-primary"
       class="block uppercase"
     >
       {{ item.title }}
