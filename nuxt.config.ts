@@ -4,7 +4,7 @@ const { resolve } = createResolver(import.meta.url)
 export default defineNuxtConfig({
   devtools: { enabled: true },
   routeRules: {
-    // '/moving-v2': { scr: false },
+    '/moving-v2': { prerender: true },
   },
   modules: [
     // eslint
