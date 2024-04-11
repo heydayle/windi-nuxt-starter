@@ -34,7 +34,26 @@ const emits = defineEmits([
   'disabledGravity',
   'click',
   'dbclick',
+  'update',
+  'updatePosition',
 ])
+
+const ACTIONS_KEY = {
+  EDITOR: 'EDITOR_KEY',
+  GENERAL: 'GENERAL_KEY',
+}
+const EDITOR_KEY = {
+  POSITION_X: 'x',
+  POSITION_Y: 'y',
+  CONTENT: 'content',
+  DRAGGABLE: 'draggable',
+  RESIZABLE: 'resizable',
+  IS_FOCUSED: 'isFocused',
+}
+const GENERAL_KEY = {
+  ACTIVE_ID: 'activeId',
+}
+
 const editor = useEditor({
   content: props.content,
   extensions: [TiptapStarterKit, Underline],
@@ -70,12 +89,19 @@ const moveableStyle = reactive({
 const onDrag = (e: any) => {
   const rotate = e.transform.match(/rotate\((.+)\)/)
   if (rotate && rotate.length) e.target.style.transform = `rotate(${rotate[1]})`
-  emits('update:x', e.left)
-  emits('update:y', e.top)
   editor.value?.commands?.setContent(
     `x: ${Math.round(e.left)}, y: ${Math.round(e.top)}`,
   )
-  emits('update:content', editor.value?.getHTML())
+  // emits('update', {
+  //   action: ACTIONS_KEY.EDITOR,
+  //   key: EDITOR_KEY.CONTENT,
+  //   value: editor.value?.getHTML(),
+  //   index: props.index,
+  // })
+  emits('updatePosition', {
+    value: { x: e.left, y: e.top },
+    index: props.index,
+  })
 }
 const onResize = (e: any) => {
   e.target.style.width = `${e.width}px`
@@ -96,21 +122,23 @@ const onClick = (id: string) => {
   if (id !== props.activeId) {
     editor.value?.commands.blur()
   }
-  emits('clickOutside')
   emits('click', { id: id, index: props.index })
 }
-// const active = computed(() => props.activeId)
-// watch(active, () => {
-//   emits('update:resizable', active.value === props.id)
-// })
 const onClickOutside = () => {
   emits('update:isFocused', false)
   emits('update:resizable', false)
 }
-const onRemove = (id: string) => {
-  emits('update:activeId', -1)
+const onRemove = () => {
   emits('update:resizable', false)
-  emits('remove', id)
+  emits('remove', props.index)
+}
+const onEnableDrag = () => {
+  emits('update', {
+    action: ACTIONS_KEY.EDITOR,
+    key: EDITOR_KEY.DRAGGABLE,
+    value: !props.draggable,
+    index: props.index,
+  })
 }
 const contents = computed(() => editor.value?.getHTML())
 watch(
@@ -158,13 +186,12 @@ const { pause, resume, isActive } = useIntervalFn(() => {
   )
 }, 1)
 onMounted(() => {
-  // pause()
   emits('disabledGravity')
 })
 watch(
   () => props.gravity,
   (value) => {
-    if (value) {
+    if (value && props.draggable) {
       resume()
     } else pause()
   },
@@ -174,12 +201,15 @@ defineExpose({ onClickOutside })
 </script>
 <template>
   <div class="">
-    {{ index }} - Draggable: {{ draggable }}, Active: {{ resizable }}, Focus: {{ isFocused }}, {{ content }}
+    {{ index }} - Draggable: {{ draggable }}, Active: {{ resizable }}, Focus:
+    {{ isFocused }}, {{ content }}
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
         class="target absolute min-w-60 min-h-10 h-fit"
-        :class="isFocused ? 'cursor-text' : 'cursor-move'"
+        :class="
+          isFocused ? 'cursor-text' : draggable ? 'cursor-move' : 'cursor-text'
+        "
         :style="{
           left: x + 'px',
           top: y + 'px',
@@ -189,9 +219,10 @@ defineExpose({ onClickOutside })
         @dblclick.stop="onDbClick(id)"
         @click.stop="onClick(id)"
       >
+        <div class="absolute -top-5 -left-4">{{ index }}</div>
         <div
           v-if="isFocused"
-          class="space-x-2 mb-4 min-w-60 absolute -top-10 z-10"
+          class="space-x-2 mb-4 min-w-60 absolute -top-10 z-10 overflow-visible"
         >
           <UButton
             :disabled="!editor?.can().chain().focus().toggleBold().run()"
@@ -215,15 +246,25 @@ defineExpose({ onClickOutside })
             <u>U</u>
           </UButton>
         </div>
-        <div v-if="resizable" class="absolute -top-10 -right-10 z-10">
+        <div
+          v-if="resizable"
+          class="absolute flex flex-col -top-4 -right-10 z-10"
+        >
           <UButton
+            icon="mdi:close"
             color="black"
-            variant="outline"
-            circle
-            :ui="{ rounded: 'rounded-full' }"
-            @click.stop="onRemove(id)"
+            variant="ghost"
+            size="2xs"
+            @click.stop="onRemove"
           >
-            <Icon name="mdi:close" />
+          </UButton>
+          <UButton
+            :color="draggable ? 'primary' : 'gray'"
+            icon="simple-line-icons:cursor-move"
+            :variant="draggable ? 'solid' : 'ghost'"
+            size="2xs"
+            @click.stop="onEnableDrag"
+          >
           </UButton>
         </div>
         <TiptapEditorContent

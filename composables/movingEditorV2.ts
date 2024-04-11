@@ -15,7 +15,7 @@ export const useMovingEditorV2 = () => {
   const editorList = ref<IEditor[]>([
     {
       id: uuidv4(),
-      x: 250,
+      x: 290,
       y: 150,
       content: '<p>Double click to edit</p>',
       draggable: true,
@@ -25,7 +25,7 @@ export const useMovingEditorV2 = () => {
     },
     {
       id: uuidv4(),
-      x: 250,
+      x: 290,
       y: 250,
       content: '<p>One click to resize</p>',
       draggable: true,
@@ -35,7 +35,7 @@ export const useMovingEditorV2 = () => {
     },
     {
       id: uuidv4(),
-      x: 0,
+      x: 20,
       y: 250,
       content: '<p>Click and hold to drag</p>',
       draggable: true,
@@ -45,7 +45,7 @@ export const useMovingEditorV2 = () => {
     },
     {
       id: uuidv4(),
-      x: 0,
+      x: 20,
       y: 150,
       content: '<p>Hello, I\'m Nuxt</p>',
       draggable: false,
@@ -73,8 +73,8 @@ export const useMovingEditorV2 = () => {
     }
     get(editorList).push(newE)
   }
-  const onRemoveEditor = (id: string) => {
-    const newList = [...editorList.value.filter((e: IEditor) => e.id !== id)]
+  const onRemoveEditor = (index: number) => {
+    const newList = [...editorList.value].filter((e, idx) => idx !== index)
     set(editorList, [])
     setTimeout(() => {
       set(editorList, newList)
