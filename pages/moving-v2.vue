@@ -101,7 +101,6 @@ const onUpdatePosition = (options: IUpdatePosition) => {
   if (!editorItem) return
   editorItem.x = value.x
   editorItem.y = value.y
-  editorItem.content = '(x: ' + value.x + ', y:' + value.y + ')'
 }
 const onRemove = (index: number) => {
   onRemoveEditor(index)
@@ -142,16 +141,11 @@ const heightArea = useElementSize(areaRef)?.height
       :key="index"
       v-bind="{
         ...editor,
+        activeId,
         gravity,
         heightArea,
         index,
       }"
-      v-model:activeId="activeId"
-      v-model:x="editor.x"
-      v-model:y="editor.y"
-      v-model:draggable="editor.draggable"
-      v-model:resizable="editor.resizable"
-      v-model:isFocused="editor.isFocused"
       @update="onUpdate"
       @update-position="onUpdatePosition"
       @click-outside="onClickOutside"

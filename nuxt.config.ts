@@ -3,6 +3,9 @@ const { resolve } = createResolver(import.meta.url)
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  routeRules: {
+    // '/moving-v2': { scr: false },
+  },
   modules: [
     // eslint
     // '@nuxtjs/eslint-module',

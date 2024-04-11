@@ -104,6 +104,7 @@ const onDrag = (e: any) => {
   })
 }
 const onResize = (e: any) => {
+  getHeightEditor()
   e.target.style.width = `${e.width}px`
   e.target.style.height = `${e.height}px`
   moveableStyle.height = e.height
@@ -155,14 +156,23 @@ const onEnableDrag = () => {
     index: props.index,
   })
 }
+const getHeightEditor = () => {
+  const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
+  editorStyle.minHeight = elTipTap?.offsetHeight
+}
 const contents = computed(() => editor.value?.getHTML())
 watch(
   contents,
   () => {
-    emits('update:content', contents.value)
+    emits('update', {
+      action: ACTIONS_KEY.EDITOR,
+      key: EDITOR_KEY.CONTENT,
+      value: contents,
+      index: props.index,
+    })
+    getHeightEditor()
     const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
     if (elTipTap?.offsetHeight > moveableStyle.height) {
-      editorStyle.height = elTipTap?.offsetHeight
       moveableRef.value?.request(
         'resizable',
         {
@@ -180,14 +190,7 @@ watch(
   (value) => {
     editorStyle.minHeight = value
     moveableStyle.height =
-      value < moveableStyle.height ? moveableStyle.height : value
-  },
-)
-watch(
-  () => moveableStyle.height,
-  (value) => {
-    editorStyle.minHeight =
-      value > editorStyle.height ? editorStyle.height : value
+      value < moveableStyle.height ? value : moveableStyle.height
   },
 )
 const { pause, resume, isActive } = useIntervalFn(() => {
