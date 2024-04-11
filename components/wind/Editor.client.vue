@@ -86,6 +86,7 @@ const onDbClick = () => {
   editor.value?.commands.focus('end')
 }
 const onClick = (id: string | number) => {
+  emits('clickOutside')
   emits('update:activeId', id)
   if (id !== props.activeId) {
     editor.value?.commands.blur()
@@ -99,7 +100,7 @@ watch(active, () => {
   resizable.value = active.value === props.id
 })
 const onClickOutside = () => {
-  onClick(-1)
+  // onClick(-1)
   isFocused.value = false
   resizable.value = false
 }
@@ -162,7 +163,9 @@ watch(
     if (value) {
       resume()
     } else pause()
-  }, { immediate: true })
+  },
+  { immediate: true },
+)
 defineExpose({ onClickOutside })
 </script>
 <template>
