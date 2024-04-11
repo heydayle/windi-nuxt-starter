@@ -1,4 +1,4 @@
-import { get, set } from '@vueuse/core'
+import { get, set, useElementSize } from '@vueuse/core'
 import { v4 as uuidv4 } from 'uuid'
 
 interface IEditor {
@@ -12,6 +12,11 @@ interface IEditor {
   isFocused?: boolean
 }
 export const useMovingEditorV2 = () => {
+  const area = ref<HTMLElement | null>(null)
+  onMounted(() => {
+    area.value = document.querySelector('.area')
+  })
+  const { width } = useElementSize(area)
   const editorList = ref<IEditor[]>([
     {
       id: uuidv4(),
@@ -59,8 +64,8 @@ export const useMovingEditorV2 = () => {
   }
   const createEditor = () => {
     const position = {
-      x: getRandomInt(window.innerWidth - 600),
-      y: getRandomInt(window.innerHeight - 70),
+      x: getRandomInt(width.value),
+      y: getRandomInt(width.value),
     }
     const newE = {
       ...position,

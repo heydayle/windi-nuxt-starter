@@ -112,12 +112,17 @@ const onSetGravity = () => {
   set(gravity, !get(gravity))
 }
 
-const areaRef = ref(null)
-const heightArea = useElementSize(areaRef)?.height
+const areaA = ref(null)
+const areaB = ref(null)
+const onClickOutArea = (options: { isA: boolean }) => {
+  if (options.isA)
+    areaB.value?.onClickOutside()
+  else areaA.value?.onClickOutside()
+}
 </script>
 <template>
   <div class="flex space-x-4">
-    <WindArea />
-    <WindArea />
+    <WindArea ref="areaA" :isA="true" @clickOutArea="onClickOutArea"/>
+    <WindArea ref="areaB" @clickOutArea="onClickOutArea" />
   </div>
 </template>

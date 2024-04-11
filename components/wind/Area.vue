@@ -5,7 +5,10 @@ useSeoMeta({
   title: 'Moving editor',
 })
 definePageMeta({ layout: 'area' })
-
+const props = defineProps<{ isA?: boolean }>()
+const emits = defineEmits([
+  'clickOutArea'
+])
 const activeId = ref<string>('')
 const activeIndex = ref<number>(-1)
 const { editorList, createEditor, onRemoveEditor, onClear } =
@@ -20,6 +23,7 @@ const onClickOutside = () => {
   activeIndex.value = -1
 }
 const onClick = (value: { id: string; index: number }) => {
+  emits('clickOutArea', { isA: props.isA || false })
   if (value.id === get(activeId)) {
     return
   }
@@ -114,11 +118,12 @@ const onSetGravity = () => {
 
 const areaRef = ref(null)
 const heightArea = useElementSize(areaRef)?.height
+defineExpose({ onClickOutside })
 </script>
 <template>
   <div
     ref="areaRef"
-    class="relative h-[calc(100vh-70px)] w-full overflow-hidden z-10"
+    class="area relative h-[calc(100vh-70px)] w-full overflow-hidden z-10"
     @click="onClickOutside"
   >
     <div class="flex mb-4">

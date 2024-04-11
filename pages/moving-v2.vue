@@ -118,7 +118,7 @@ const heightArea = useElementSize(areaRef)?.height
 <template>
   <div
     ref="areaRef"
-    class="relative h-[calc(100vh-70px)] max-w-screen-2xl overflow-hidden z-10"
+    class="area relative h-[calc(100vh-70px)] max-w-screen-2xl overflow-hidden z-10"
     @click="onClickOutside"
   >
     <div class="flex mb-4">
