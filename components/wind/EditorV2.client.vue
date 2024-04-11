@@ -174,7 +174,7 @@ defineExpose({ onClickOutside })
 </script>
 <template>
   <div class="">
-    {{ index }} - Active: {{ resizable }}, Focus: {{ isFocused }}, {{ content }}
+    {{ index }} - Draggable: {{ draggable }}, Active: {{ resizable }}, Focus: {{ isFocused }}, {{ content }}
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
