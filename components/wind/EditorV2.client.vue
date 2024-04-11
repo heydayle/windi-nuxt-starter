@@ -33,7 +33,7 @@ const emits = defineEmits([
   'update:isFocused',
   'disabledGravity',
   'click',
-  'dbclick',
+  'dblclick',
   'update',
   'updatePosition',
 ])
@@ -115,7 +115,7 @@ const onBound = (e) => {
   // console.log(e)
 }
 const onDbClick = (id: string) => {
-  emits('dbclick', { id: id, index: props.index })
+  emits('dblclick', { id: id, index: props.index })
   editor.value?.commands.focus('end')
 }
 const onClick = (id: string) => {
@@ -125,11 +125,26 @@ const onClick = (id: string) => {
   emits('click', { id: id, index: props.index })
 }
 const onClickOutside = () => {
-  emits('update:isFocused', false)
-  emits('update:resizable', false)
+  emits('update', {
+    action: ACTIONS_KEY.EDITOR,
+    key: EDITOR_KEY.IS_FOCUSED,
+    value: false,
+    index: props.index,
+  })
+  emits('update', {
+    action: ACTIONS_KEY.EDITOR,
+    key: EDITOR_KEY.RESIZABLE,
+    value: false,
+    index: props.index,
+  })
 }
 const onRemove = () => {
-  emits('update:resizable', false)
+  emits('update', {
+    action: ACTIONS_KEY.EDITOR,
+    key: EDITOR_KEY.RESIZABLE,
+    value: false,
+    index: props.index,
+  })
   emits('remove', props.index)
 }
 const onEnableDrag = () => {
@@ -201,12 +216,32 @@ defineExpose({ onClickOutside })
 </script>
 <template>
   <div class="">
-    {{ index }} - Draggable: {{ draggable }}, Active: {{ resizable }}, Focus:
-    {{ isFocused }}, {{ content }}
+    <div class="flex space-x-4 items-center">
+      <div>{{ index }}</div>
+      <UCheckbox
+        :model-value="draggable"
+        name="Draggable"
+        label="Draggable"
+        disabled
+      />,
+      <UCheckbox
+        :model-value="isFocused"
+        name="Focused"
+        label="Focused"
+        disabled
+      />,
+      <UCheckbox
+        :model-value="resizable"
+        name="Active"
+        label="Active"
+        disabled
+      />,
+      <div>{{ content }}</div>
+    </div>
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
-        class="target absolute min-w-60 min-h-10 h-fit"
+        class="target absolute min-w-60 min-h-10 h-fit bg-black"
         :class="
           isFocused ? 'cursor-text' : draggable ? 'cursor-move' : 'cursor-text'
         "

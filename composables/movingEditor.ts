@@ -31,7 +31,7 @@ export const useMovingEditor = () => {
       id: uuidv4(),
       x: 0,
       y: 150,
-      content: '<p>Hello, I\'m Nuxt</p>',
+      content: "<p>Hello, I'm Nuxt</p>",
     },
   ])
   const getRandomInt = (max: number = 1) => {

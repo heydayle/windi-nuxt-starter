@@ -156,7 +156,7 @@ const heightArea = useElementSize(areaRef)?.height
       @update-position="onUpdatePosition"
       @click-outside="onClickOutside"
       @click="onClick"
-      @dbclick="onDbClick"
+      @dblclick="onDbClick"
       @remove="onRemove"
       @disabled-gravity="gravity = false"
     />

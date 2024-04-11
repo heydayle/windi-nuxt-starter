@@ -22,7 +22,7 @@ const titles = computed(() => {
 })
 const activeTitle = ref(0)
 useIntervalFn(() => {
-  activeTitle.value = activeTitle.value < 2 ? activeTitle.value += 1 : 0
+  activeTitle.value = activeTitle.value < 2 ? (activeTitle.value += 1) : 0
 }, 5000)
 </script>
 <template>

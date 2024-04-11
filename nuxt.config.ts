@@ -18,7 +18,7 @@ export default defineNuxtConfig({
     'nuxt-tiptap-editor',
   ],
   tiptap: {
-    prefix: "Tiptap",
+    prefix: 'Tiptap',
   },
   i18n: {
     // langDir: '~/locales/',
