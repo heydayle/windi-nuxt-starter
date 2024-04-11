@@ -36,8 +36,13 @@ export default defineAppConfig({
             },
             {
               type: 'link',
-              title: 'Movable Editor',
+              title: 'Editor V1',
               to: { name: 'Moving', path: '/moving' },
+            },
+            {
+              type: 'link',
+              title: 'Editor V2',
+              to: { name: 'Moving V2', path: '/moving-v2' },
             },
           ],
         },

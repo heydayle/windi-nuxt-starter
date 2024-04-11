@@ -11,9 +11,14 @@ const props = defineProps<{
   y: number
   content: string
   id: string
-  activeId: string | number
+  activeId: string
   gravity: boolean
   heightArea: number
+  draggable: boolean
+  resizable: boolean
+  rotatable: boolean
+  isFocused: boolean
+  index: number
 }>()
 const emits = defineEmits([
   'update:activeId',
@@ -21,7 +26,14 @@ const emits = defineEmits([
   'remove',
   'update:x',
   'update:y',
+  'update:content',
+  'update:draggable',
+  'update:rotatable',
+  'update:resizable',
+  'update:isFocused',
   'disabledGravity',
+  'click',
+  'dbclick',
 ])
 const editor = useEditor({
   content: props.content,
@@ -29,13 +41,10 @@ const editor = useEditor({
 })
 const refEditor = ref<HTMLElement | null>(null)
 
-const draggable = ref<boolean>(true)
-const rotatable = ref<boolean>(true)
 const throttleDrag = 1
 const edgeDraggable = false
 const startDragRotate = 0
 const throttleDragRotate = 0
-const resizable = ref<boolean>(false)
 const keepRatio = false
 const snappable = true
 const bounds = {
@@ -66,6 +75,7 @@ const onDrag = (e: any) => {
   editor.value?.commands?.setContent(
     `x: ${Math.round(e.left)}, y: ${Math.round(e.top)}`,
   )
+  emits('update:content', editor.value?.getHTML())
 }
 const onResize = (e: any) => {
   e.target.style.width = `${e.width}px`
@@ -78,40 +88,35 @@ const onRotate = (e: any) => {
 const onBound = (e) => {
   // console.log(e)
 }
-const isFocused = ref(false)
-const onDbClick = () => {
-  if (isFocused.value) return
-  isFocused.value = true
-  resizable.value = !isFocused.value
+const onDbClick = (id: string) => {
+  emits('dbclick', { id: id, index: props.index })
   editor.value?.commands.focus('end')
 }
-const onClick = (id: string | number) => {
-  emits('clickOutside')
-  emits('update:activeId', id)
+const onClick = (id: string) => {
   if (id !== props.activeId) {
     editor.value?.commands.blur()
   }
-  setTimeout(() => {
-    resizable.value = id != -1 ? !isFocused.value : false
-  })
+  emits('clickOutside')
+  emits('click', { id: id, index: props.index })
 }
-const active = computed(() => props.activeId)
-watch(active, () => {
-  resizable.value = active.value === props.id
-})
+// const active = computed(() => props.activeId)
+// watch(active, () => {
+//   emits('update:resizable', active.value === props.id)
+// })
 const onClickOutside = () => {
-  isFocused.value = false
-  resizable.value = false
+  emits('update:isFocused', false)
+  emits('update:resizable', false)
 }
 const onRemove = (id: string) => {
   emits('update:activeId', -1)
-  resizable.value = false
+  emits('update:resizable', false)
   emits('remove', id)
 }
 const contents = computed(() => editor.value?.getHTML())
 watch(
   contents,
   () => {
+    emits('update:content', contents.value)
     const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
     if (elTipTap?.offsetHeight > moveableStyle.height) {
       editorStyle.height = elTipTap?.offsetHeight
@@ -169,6 +174,7 @@ defineExpose({ onClickOutside })
 </script>
 <template>
   <div class="">
+    {{ index }} - Active: {{ resizable }}, Focus: {{ isFocused }}, {{ content }}
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
@@ -180,7 +186,7 @@ defineExpose({ onClickOutside })
           'min-height': editorStyle.minHeight + 'px',
           height: moveableStyle.height + 'px',
         }"
-        @dblclick.stop="onDbClick"
+        @dblclick.stop="onDbClick(id)"
         @click.stop="onClick(id)"
       >
         <div
