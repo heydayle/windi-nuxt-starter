@@ -139,7 +139,6 @@ defineExpose({ onClickOutside })
       <UBadge class="ml-4" variant="outline"
         >Active Index: {{ activeIndex }}</UBadge
       >
-      <UBadge class="ml-4" variant="outline">Active Id: {{ activeId }}</UBadge>
     </div>
     <WindEditorV2
       v-for="(editor, index) in editorList"
