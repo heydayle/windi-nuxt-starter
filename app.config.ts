@@ -55,6 +55,7 @@ export default defineAppConfig({
     page: {
       welcome: {
         title: 'Windy Nuxt Starter',
+        description: 'A template starter using NUXT 3',
       },
     },
   },
