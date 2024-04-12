@@ -36,13 +36,13 @@ export default defineAppConfig({
             },
             {
               type: 'link',
-              title: 'Editor V1',
-              to: { name: 'Moving', path: '/moving' },
+              title: 'Editor V2',
+              to: { name: 'Moving V2', path: '/moving-v2' },
             },
             {
               type: 'link',
-              title: 'Editor V2',
-              to: { name: 'Moving V2', path: '/moving-v2' },
+              title: 'Images',
+              to: { name: 'Images', path: '/list' },
             },
           ],
         },
