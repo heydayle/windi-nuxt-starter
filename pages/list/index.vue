@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useQuery } from 'vue-query'
-import type { Ref } from 'vue'
-const VUE_QUERY_HREF = 'https://vue-query.vercel.app/#/getting-started'
+const VUE_QUERY_HREF = 'https://vue-query.vercel.app/'
 const API_URL = 'https://collectionapi.metmuseum.org/'
 const ENDPOINT = {
   GET_LIST: 'public/collection/v1/objects',
