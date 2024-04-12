@@ -21,21 +21,14 @@ const props = defineProps<{
   index: number
 }>()
 const emits = defineEmits([
-  'update:activeId',
   'clickOutside',
   'remove',
-  'update:x',
-  'update:y',
-  'update:content',
-  'update:draggable',
-  'update:rotatable',
-  'update:resizable',
-  'update:isFocused',
   'disabledGravity',
   'click',
   'dblclick',
   'update',
   'updatePosition',
+  'update:draggable',
 ])
 
 const ACTIONS_KEY = {
@@ -61,11 +54,12 @@ const editor = useEditor({
 const refEditor = ref<HTMLElement | null>(null)
 
 const throttleDrag = 1
-const edgeDraggable = false
+const edgeDraggable = true
 const startDragRotate = 0
 const throttleDragRotate = 0
 const keepRatio = false
-const snappable = true
+const snappable = false
+const scalable = true
 const bounds = {
   left: 0,
   top: 0,
@@ -92,12 +86,6 @@ const onDrag = (e: any) => {
   editor.value?.commands?.setContent(
     `x: ${Math.round(e.left)}, y: ${Math.round(e.top)}`,
   )
-  // emits('update', {
-  //   action: ACTIONS_KEY.EDITOR,
-  //   key: EDITOR_KEY.CONTENT,
-  //   value: editor.value?.getHTML(),
-  //   index: props.index,
-  // })
   emits('updatePosition', {
     value: { x: e.left, y: e.top },
     index: props.index,
@@ -107,13 +95,15 @@ const onResize = (e: any) => {
   getHeightEditor()
   e.target.style.width = `${e.width}px`
   e.target.style.height = `${e.height}px`
+  e.target.style.transform = e.drag.transform;
+  emits('updatePosition', {
+    value: { x: e.left, y: e.top },
+    index: props.index,
+  })
   moveableStyle.height = e.height
 }
 const onRotate = (e: any) => {
   e.target.style.transform = e.drag.transform
-}
-const onBound = (e) => {
-  // console.log(e)
 }
 const onDbClick = (id: string) => {
   emits('dblclick', { id: id, index: props.index })
@@ -194,7 +184,12 @@ watch(
   },
 )
 const { pause, resume, isActive } = useIntervalFn(() => {
-  emits('update:y', props.y + 0.98)
+  emits('update', {
+    action: ACTIONS_KEY.EDITOR,
+    key: EDITOR_KEY.POSITION_Y,
+    value: props.y + 0.98,
+    index: props.index,
+  })
   moveableRef.value?.request(
     'draggable',
     {
@@ -318,19 +313,12 @@ defineExpose({ onClickOutside })
         v-bind="{
           draggable,
           rotatable,
-          throttleDrag,
-          edgeDraggable,
           startDragRotate,
-          throttleDragRotate,
           resizable,
           keepRatio,
-          snappable,
-          bounds,
-          edge,
         }"
         @drag="onDrag"
         @resize="onResize"
-        @bound="onBound"
         @rotate="onRotate"
       />
     </div>
@@ -339,7 +327,7 @@ defineExpose({ onClickOutside })
 <style lang="scss">
 .tiptap-element {
   .tiptap {
-    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto text-center flex flex-col justify-center items-center;
+    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto text-center ;
   }
 }
 .moveable-control-box {

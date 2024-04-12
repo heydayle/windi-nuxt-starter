@@ -123,7 +123,7 @@ defineExpose({ onClickOutside })
 <template>
   <div
     ref="areaRef"
-    class="area relative h-[calc(100vh-70px)] w-full overflow-hidden z-10"
+    class="area relative h-[calc(100vh-70px)] w-full overflow-visible z-10"
     @click="onClickOutside"
   >
     <div class="flex mb-4">
