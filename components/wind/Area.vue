@@ -118,12 +118,14 @@ const onSetGravity = () => {
 
 const areaRef = ref(null)
 const heightArea = useElementSize(areaRef)?.height
+const scale = ref(1)
 defineExpose({ onClickOutside })
 </script>
 <template>
   <div
     ref="areaRef"
-    class="area relative h-[calc(100vh-70px)] w-full overflow-visible z-10"
+    :style="{ scale: scale }"
+    class="area relative h-[calc(100vh-70px)] w-full overflow-hidden z-10"
     @click="onClickOutside"
   >
     <div class="flex mb-4">
@@ -139,6 +141,7 @@ defineExpose({ onClickOutside })
       <UBadge class="ml-4" variant="outline"
         >Active Index: {{ activeIndex }}</UBadge
       >
+      <UInput v-model="scale" :max="1" :min="0.1" class="ml-4 max-w-10" />
     </div>
     <WindEditorV2
       v-for="(editor, index) in editorList"
@@ -149,6 +152,7 @@ defineExpose({ onClickOutside })
         gravity,
         heightArea,
         index,
+        scale,
       }"
       @update="onUpdate"
       @update-position="onUpdatePosition"

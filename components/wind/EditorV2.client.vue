@@ -19,6 +19,7 @@ const props = defineProps<{
   rotatable: boolean
   isFocused: boolean
   index: number
+  scale: number
 }>()
 const emits = defineEmits([
   'clickOutside',
@@ -58,7 +59,7 @@ const edgeDraggable = true
 const startDragRotate = 0
 const throttleDragRotate = 0
 const keepRatio = false
-const snappable = false
+const snappable = true
 const scalable = true
 const bounds = {
   left: 0,
@@ -95,7 +96,7 @@ const onResize = (e: any) => {
   getHeightEditor()
   e.target.style.width = `${e.width}px`
   e.target.style.height = `${e.height}px`
-  e.target.style.transform = e.drag.transform;
+  e.target.style.transform = e.drag.transform
   emits('updatePosition', {
     value: { x: e.left, y: e.top },
     index: props.index,
@@ -313,9 +314,15 @@ defineExpose({ onClickOutside })
         v-bind="{
           draggable,
           rotatable,
+          throttleDrag,
+          edgeDraggable,
           startDragRotate,
+          throttleDragRotate,
           resizable,
           keepRatio,
+          snappable,
+          bounds,
+          edge,
         }"
         @drag="onDrag"
         @resize="onResize"
@@ -327,7 +334,7 @@ defineExpose({ onClickOutside })
 <style lang="scss">
 .tiptap-element {
   .tiptap {
-    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto text-center ;
+    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto text-center;
   }
 }
 .moveable-control-box {
