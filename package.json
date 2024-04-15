@@ -14,7 +14,6 @@
     "lintfix": "prettier --write --list-different . && pnpm lint:js --fix"
   },
   "dependencies": {
-    "@nuxt/kit": "npm:@nuxt/kit-nightly@latest",
     "@nuxt/ui": "^2.15.0",
     "@pinia/nuxt": "^0.5.1",
     "@tiptap/extension-document": "^2.2.6",
@@ -25,7 +24,7 @@
     "@vueuse/components": "^10.9.0",
     "@vueuse/core": "^10.5.0",
     "@vueuse/nuxt": "^10.5.0",
-    "nuxt": "^3.11.1",
+    "nuxt": "link:@vueuse/sound/nuxt",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.3",
     "uuid": "^9.0.1",
