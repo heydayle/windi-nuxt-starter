@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Button from '../../../packages/components/button.vue'
 import { useQuery } from 'vue-query'
 const VUE_QUERY_HREF = 'https://vue-query.vercel.app/'
 const API_URL = 'https://collectionapi.metmuseum.org/'
@@ -51,6 +52,7 @@ const goDetail = (id: any) => {
       </UButton>
     </div>
     <div v-else>loading...</div>
+    <Button src="start 1" />
   </div>
 </template>
 

@@ -22,7 +22,7 @@ export const useMovingEditorV2 = () => {
       id: uuidv4(),
       x: 760,
       y: 50,
-      content: "<p>Hello, I'm Nuxt</p>",
+      content: '<p>Hello, I am Nuxt</p>',
       draggable: false,
       resizable: false,
       rotatable: true,
