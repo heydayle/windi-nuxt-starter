@@ -33,7 +33,8 @@
     "vue-query": "^1.26.0",
     "vue-router": "^4.3.0",
     "vue-sonner": "^1.1.2",
-    "vue3-moveable": "^0.28.0"
+    "vue3-moveable": "^0.28.0",
+    "yc-vue3-ui": "^0.0.1"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",

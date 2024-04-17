@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { get, set, useElementSize } from '@vueuse/core'
 import { useMovingEditorV2 } from '~/composables/movingEditorV2'
+import type { Ref } from 'vue'
 useSeoMeta({
   title: 'Moving editor',
 })
 definePageMeta({ layout: 'area' })
 const props = defineProps<{ isA?: boolean }>()
-const emits = defineEmits([
-  'clickOutArea'
-])
+const emits = defineEmits(['clickOutArea'])
 const activeId = ref<string>('')
 const activeIndex = ref<number>(-1)
 const { editorList, createEditor, onRemoveEditor, onClear } =
@@ -56,6 +55,7 @@ interface IUpdate {
   key: string
   value: string | number | boolean
   index: number
+  component?: number
 }
 const ACTIONS_KEY = {
   EDITOR: 'EDITOR_KEY',
@@ -72,14 +72,33 @@ const EDITOR_KEY = {
 const GENERAL_KEY = {
   ACTIVE_ID: 'activeId',
 }
+const COMPONENT = {
+  EDITOR: 0,
+  TEXT_AREA: 1,
+}
+interface IEditorRef {
+  updateContent?: void
+}
+const editorRef: Ref<IEditorRef[]> = ref<IEditorRef[]>([])
+const textFieldRef: Ref<IEditorRef[]> = ref<IEditorRef[]>([])
 const onUpdateEditor = (
   key: string,
   value: string | number | boolean,
   index: number,
+  component?: number,
 ) => {
   const editorItem = editorList.value[index]
   if (!editorItem) return
   editorItem[key] = value
+
+  switch (component) {
+    case COMPONENT.TEXT_AREA:
+      get(editorRef)[index]?.updateContent(unref(value))
+      break
+    case COMPONENT.EDITOR:
+      get(textFieldRef)[index]?.updateContent(unref(value))
+      break
+  }
 }
 const onUpdateGeneral = (key: string, value: string | number | boolean) => {
   console.log(key)
@@ -91,7 +110,12 @@ const onUpdate = (options: IUpdate) => {
       onUpdateGeneral(options.key, options.value)
       break
     case ACTIONS_KEY.EDITOR:
-      onUpdateEditor(options.key, options.value, options.index)
+      onUpdateEditor(
+        options.key,
+        options.value,
+        options.index,
+        options?.component,
+      )
       break
   }
 }
@@ -115,17 +139,26 @@ const gravity = ref<boolean>(false)
 const onSetGravity = () => {
   set(gravity, !get(gravity))
 }
-
+const reactiveList = computed(() => editorList.value)
 const areaRef = ref(null)
+const textListRef = ref(null)
 const heightArea = useElementSize(areaRef)?.height
 const scale = ref(1)
+const onScrollElement = (e: HTMLElement) => {
+  const elTextList = document.querySelector('#area-text-list')
+  elTextList.scrollTo({
+    top: e.offsetTop - 120,
+    left: 0,
+    behavior: 'smooth',
+  })
+}
 defineExpose({ onClickOutside })
 </script>
 <template>
   <div
     ref="areaRef"
     :style="{ scale: scale }"
-    class="area relative h-[calc(100vh-70px)] w-full overflow-hidden z-10"
+    class="area relative h-[calc(100vh-120px)] w-full overflow-hidden z-10"
     @click="onClickOutside"
   >
     <div class="flex mb-4">
@@ -143,24 +176,37 @@ defineExpose({ onClickOutside })
       >
       <UInput v-model="scale" :max="1" :min="0.1" class="ml-4 max-w-10" />
     </div>
-    <WindEditorV2
-      v-for="(editor, index) in editorList"
-      :key="index"
-      v-bind="{
-        ...editor,
-        activeId,
-        gravity,
-        heightArea,
-        index,
-        scale,
-      }"
-      @update="onUpdate"
-      @update-position="onUpdatePosition"
-      @click-outside="onClickOutside"
-      @click="onClick"
-      @dblclick="onDbClick"
-      @remove="onRemove"
-      @disabled-gravity="gravity = false"
-    />
+    <div
+      v-if="editorList.length"
+      ref="textListRef"
+      class="h-screen overflow-auto pb-[120px]"
+    >
+      <WindEditorV2
+        v-for="(editor, index) in editorList"
+        :ref="
+          (el: IEditorRef) => {
+            editorRef[index] = el
+          }
+        "
+        :key="index"
+        v-bind="{
+          ...editor,
+          activeId,
+          gravity,
+          heightArea,
+          index,
+          scale,
+        }"
+        v-model="editorList[index]"
+        @update="onUpdate"
+        @update-position="onUpdatePosition"
+        @click-outside="onClickOutside"
+        @click="onClick"
+        @dblclick="onDbClick"
+        @remove="onRemove"
+        @disabled-gravity="gravity = false"
+        @scroll-to-element="onScrollElement"
+      />
+    </div>
   </div>
 </template>

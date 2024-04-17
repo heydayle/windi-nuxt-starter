@@ -52,7 +52,6 @@ const goDetail = (id: any) => {
       </UButton>
     </div>
     <div v-else>loading...</div>
-    <Button src="start 1" />
   </div>
 </template>
 

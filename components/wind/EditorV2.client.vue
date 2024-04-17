@@ -2,7 +2,14 @@
 import Moveable from 'vue3-moveable'
 import { ref } from 'vue'
 import Underline from '@tiptap/extension-underline'
-import { useIntervalFn } from '@vueuse/core'
+import {
+  useDebounce,
+  useDebounceFn,
+  useIntervalFn,
+  useScroll,
+  useVModel,
+  useWindowScroll,
+} from '@vueuse/core'
 useSeoMeta({
   title: 'Moving editor',
 })
@@ -20,6 +27,7 @@ const props = defineProps<{
   isFocused: boolean
   index: number
   scale: number
+  modelValue: any
 }>()
 const emits = defineEmits([
   'clickOutside',
@@ -30,6 +38,8 @@ const emits = defineEmits([
   'update',
   'updatePosition',
   'update:draggable',
+  'update:content',
+  'scrollToElement',
 ])
 
 const ACTIONS_KEY = {
@@ -47,13 +57,20 @@ const EDITOR_KEY = {
 const GENERAL_KEY = {
   ACTIVE_ID: 'activeId',
 }
+const COMPONENT = {
+  EDITOR: 0,
+  TEXT_AREA: 1,
+}
+
+const model = toRef(() => props.modelValue)
 
 const editor = useEditor({
   content: props.content,
   extensions: [TiptapStarterKit, Underline],
 })
-const refEditor = ref<HTMLElement | null>(null)
+const editorClone = computed(() => editor.value)
 
+const refEditor = ref<HTMLElement | null>(null)
 const throttleDrag = 1
 const edgeDraggable = true
 const startDragRotate = 0
@@ -152,30 +169,24 @@ const getHeightEditor = () => {
   editorStyle.minHeight = elTipTap?.offsetHeight
 }
 const contents = computed(() => editor.value?.getHTML())
-watch(
-  contents,
-  () => {
-    emits('update', {
-      action: ACTIONS_KEY.EDITOR,
-      key: EDITOR_KEY.CONTENT,
-      value: contents,
-      index: props.index,
-    })
-    getHeightEditor()
-    const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
-    if (elTipTap?.offsetHeight > moveableStyle.height) {
-      moveableRef.value?.request(
-        'resizable',
-        {
-          offsetWidth: elTipTap?.offsetWidth,
-          offsetHeight: elTipTap?.offsetHeight,
-        },
-        true,
-      )
-    }
-  },
-  { deep: true },
-)
+const onDebounceEditingContent = useDebounceFn(() => {
+  model.value.content = contents
+}, 700)
+watch(contents, () => {
+  onDebounceEditingContent()
+  getHeightEditor()
+  const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
+  if (elTipTap?.offsetHeight > moveableStyle.height) {
+    moveableRef.value?.request(
+      'resizable',
+      {
+        offsetWidth: elTipTap?.offsetWidth,
+        offsetHeight: elTipTap?.offsetHeight,
+      },
+      true,
+    )
+  }
+})
 watch(
   () => editorStyle.height,
   (value) => {
@@ -211,32 +222,47 @@ watch(
   },
   { immediate: true },
 )
-defineExpose({ onClickOutside })
+const onChangeContent = useDebounceFn((e) => {
+  updateContent(e.target.innerHTML)
+  setTimeout(() => {
+    const range = document.createRange()
+    range.setStart(e.target, e.target.childNodes.length)
+    const selection = window.getSelection()
+    range.collapse(true)
+    selection?.removeAllRanges()
+    selection?.addRange(range)
+  }, 100)
+}, 700)
+const updateContent = (value: string) => {
+  editor.value?.commands.setContent(value)
+}
+const textRef = ref(null)
+
+defineExpose({ onClickOutside, updateContent })
+
+watch(
+  () => props.activeId,
+  () => {
+    if (props.id === props.activeId) emits('scrollToElement', textRef.value)
+  },
+)
 </script>
 <template>
-  <div class="">
-    <div class="flex space-x-4 items-center">
-      <div>{{ index }}</div>
-      <UCheckbox
-        :model-value="draggable"
-        name="Draggable"
-        label="Draggable"
-        disabled
-      />,
-      <UCheckbox
-        :model-value="isFocused"
-        name="Focused"
-        label="Focused"
-        disabled
-      />,
-      <UCheckbox
-        :model-value="resizable"
-        name="Active"
-        label="Active"
-        disabled
-      />,
-      <div>{{ content }}</div>
-    </div>
+  <div v-if="editor" class="">
+    <Teleport to="#area-text-list">
+      <div
+        class="w-full min-h-40 my-2 p-2 border border-gray-800 space-x-4 items-center rounded-xl"
+        :class="[{ '!border-primary': resizable || isFocused }]"
+      >
+        <div
+          ref="textRef"
+          class="border border-gray-500 p-2 rounded-lg"
+          :contenteditable="true"
+          @input="onChangeContent"
+          v-html="model.content"
+        />
+      </div>
+    </Teleport>
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
