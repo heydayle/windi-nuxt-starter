@@ -146,7 +146,7 @@ const heightArea = useElementSize(areaRef)?.height
 const scale = ref(1)
 const onScrollElement = (e: HTMLElement) => {
   const elTextList = document.querySelector('#area-text-list')
-  elTextList.scrollTo({
+  elTextList?.scrollTo({
     top: e.offsetTop - 120,
     left: 0,
     behavior: 'smooth',

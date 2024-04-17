@@ -2,6 +2,8 @@
 import Moveable from 'vue3-moveable'
 import { ref } from 'vue'
 import Underline from '@tiptap/extension-underline'
+import Collaboration from '@tiptap/extension-collaboration'
+import * as Y from 'yjs'
 import {
   useDebounce,
   useDebounceFn,
@@ -38,7 +40,7 @@ const emits = defineEmits([
   'update',
   'updatePosition',
   'update:draggable',
-  'update:content',
+  'update:modelValue',
   'scrollToElement',
 ])
 
@@ -63,12 +65,23 @@ const COMPONENT = {
 }
 
 const model = toRef(() => props.modelValue)
-
+const ydoc =  new Y.Doc()
 const editor = useEditor({
+  extensions: [
+    TiptapStarterKit,
+    Underline,
+    Collaboration.configure({ document: ydoc, field: 'Content' }),
+  ],
   content: props.content,
-  extensions: [TiptapStarterKit, Underline],
 })
-const editorClone = computed(() => editor.value)
+const editorTextField = useEditor({
+  extensions: [
+    TiptapStarterKit,
+    Underline,
+    Collaboration.configure({ document: ydoc, field: 'text' }),
+  ],
+  content: props.content,
+})
 
 const refEditor = ref<HTMLElement | null>(null)
 const throttleDrag = 1
@@ -114,10 +127,10 @@ const onResize = (e: any) => {
   e.target.style.width = `${e.width}px`
   e.target.style.height = `${e.height}px`
   e.target.style.transform = e.drag.transform
-  emits('updatePosition', {
-    value: { x: e.left, y: e.top },
-    index: props.index,
-  })
+
+  model.value.x = e.drag.left || 0
+  model.value.y = e.drag.top || 0
+  emits('update:modelValue', model.value)
   moveableStyle.height = e.height
 }
 const onRotate = (e: any) => {
@@ -166,14 +179,26 @@ const onEnableDrag = () => {
 }
 const getHeightEditor = () => {
   const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
-  editorStyle.minHeight = elTipTap?.offsetHeight
+  editorStyle.minHeight = parseInt(elTipTap?.offsetHeight || 40)
 }
 const contents = computed(() => editor.value?.getHTML())
-const onDebounceEditingContent = useDebounceFn(() => {
-  model.value.content = contents
+const contentsTextField = computed(() => editorTextField.value?.getHTML())
+const onDebounceEditingContent = useDebounceFn((component: number) => {
+  emits('update:modelValue', model.value)
+  switch (component) {
+    case COMPONENT.EDITOR:
+      editorTextField.value?.commands?.setContent(unref(contents))
+          break
+    case COMPONENT.TEXT_AREA:
+      editor.value?.commands?.setContent(unref(contentsTextField))
+  }
+
 }, 700)
+watch(contentsTextField, () => {
+  onDebounceEditingContent(COMPONENT.TEXT_AREA)
+})
 watch(contents, () => {
-  onDebounceEditingContent()
+  onDebounceEditingContent(COMPONENT.EDITOR)
   getHeightEditor()
   const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
   if (elTipTap?.offsetHeight > moveableStyle.height) {
@@ -251,16 +276,42 @@ watch(
   <div v-if="editor" class="">
     <Teleport to="#area-text-list">
       <div
+        ref="textRef"
         class="w-full min-h-40 my-2 p-2 border border-gray-800 space-x-4 items-center rounded-xl"
         :class="[{ '!border-primary': resizable || isFocused }]"
       >
-        <div
-          ref="textRef"
-          class="border border-gray-500 p-2 rounded-lg"
-          :contenteditable="true"
-          @input="onChangeContent"
-          v-html="model.content"
-        />
+<!--        <div-->
+<!--          ref="textRef"-->
+<!--          class="border border-gray-500 p-2 rounded-lg"-->
+<!--          :contenteditable="true"-->
+<!--          @input="onChangeContent"-->
+<!--          @click.stop-->
+<!--          v-html="model.content"-->
+<!--        />-->
+        <TiptapEditorContent v-if="editorTextField" class="" :editor="editorTextField" />
+        <div class="space-x-2 mb-4 min-w-60">
+          <UButton
+            :disabled="!editorTextField?.can().chain().focus().toggleBold().run()"
+            :color="editorTextField?.isActive('bold') ? 'primary' : 'white'"
+            @click="editorTextField?.chain().focus().toggleBold().run()"
+          >
+            <b>B</b>
+          </UButton>
+          <UButton
+            :disabled="!editorTextField?.can().chain().focus().toggleItalic().run()"
+            :color="editorTextField?.isActive('italic') ? 'primary' : 'white'"
+            @click="editorTextField?.chain().focus().toggleItalic().run()"
+          >
+            <i>I</i>
+          </UButton>
+          <UButton
+            :disabled="!editorTextField?.can().chain().focus().toggleUnderline().run()"
+            :color="editorTextField?.isActive('underline') ? 'primary' : 'white'"
+            @click="editorTextField?.chain().focus().toggleUnderline().run()"
+          >
+            <u>U</u>
+          </UButton>
+        </div>
       </div>
     </Teleport>
     <div ref="refEditor" class="">
