@@ -33,6 +33,7 @@ export default <Partial<Config>>{
       },
       animation: {
         text: 'text-color 3s ease-in-out infinite',
+        spinning: 'spin 30s linear infinite',
       },
       keyframes: {
         'text-color': {
@@ -45,6 +46,14 @@ export default <Partial<Config>>{
             'background-opacity': '1',
             'background-size': '200% 200%',
             'background-position': 'right center',
+          },
+        },
+        spin: {
+          '0%': {
+            transform: 'rotate(0deg)',
+          },
+          '100%': {
+            transform: 'rotate(360deg)',
           },
         },
       },

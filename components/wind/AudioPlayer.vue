@@ -28,7 +28,7 @@ const currentTime = ref(0)
 const countTime = () => {
   currentTime.value++
 }
-const { resume, pause } = useIntervalFn(() => countTime(), 1000)
+const { resume, pause } = useIntervalFn(() => countTime(), 1100)
 onMounted(() => {
   pause()
 })
@@ -50,8 +50,11 @@ const percentWidth = computed(() =>
     <div>
       <UButton icon="mdi:arrow-back" :ui="{ rounded: 'rounded-full' }" />
     </div>
-    <div class="py-4 grid grid-cols-[300px,1fr] gap-4">
-      <div class="rounded-2xl overflow-hidden">
+    <div class="py-4 gap-4">
+      <div
+        class="mb-4 overflow-hidden transition transform-all duration-1000 animate"
+        :class="isPlaying ? 'rounded-full animate-spinning' : 'rounded-2xl'"
+      >
         <img src="~/public/images/ab-99.png" alt="album-cover" />
       </div>
       <div>
