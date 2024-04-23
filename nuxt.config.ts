@@ -16,14 +16,21 @@ export default defineNuxtConfig({
     // ui
     '@nuxt/ui',
     '@nuxtjs/tailwindcss',
+    'nuxt-headlessui',
     // svg icon
     'nuxt-svgo',
     // locales
     '@nuxtjs/i18n',
     'nuxt-tiptap-editor',
+    // https://tiptap.dev/docs/editor/api/extensions/invisible-characters
+    // https://tiptap.dev/docs/editor/api/extensions/text-align
+    // https://vue3datepicker.com/props/modes/
   ],
   tiptap: {
     prefix: 'Tiptap',
+  },
+  headlessui: {
+    prefix: 'Headless',
   },
   i18n: {
     // langDir: '~/locales/',

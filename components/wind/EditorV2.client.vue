@@ -65,7 +65,7 @@ const COMPONENT = {
 }
 
 const model = toRef(() => props.modelValue)
-const ydoc =  new Y.Doc()
+const ydoc = new Y.Doc()
 const editor = useEditor({
   extensions: [
     TiptapStarterKit,
@@ -188,16 +188,16 @@ const onDebounceEditingContent = useDebounceFn((component: number) => {
   switch (component) {
     case COMPONENT.EDITOR:
       editorTextField.value?.commands?.setContent(unref(contents))
-          break
+      break
     case COMPONENT.TEXT_AREA:
       editor.value?.commands?.setContent(unref(contentsTextField))
   }
-
 }, 700)
 watch(contentsTextField, () => {
   onDebounceEditingContent(COMPONENT.TEXT_AREA)
 })
 watch(contents, () => {
+  onChangeContent()
   onDebounceEditingContent(COMPONENT.EDITOR)
   getHeightEditor()
   const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
@@ -248,14 +248,14 @@ watch(
   { immediate: true },
 )
 const onChangeContent = useDebounceFn((e) => {
-  updateContent(e.target.innerHTML)
+  // updateContent(e.target.innerHTML)
   setTimeout(() => {
     const range = document.createRange()
-    range.setStart(e.target, e.target.childNodes.length)
-    const selection = window.getSelection()
-    range.collapse(true)
-    selection?.removeAllRanges()
-    selection?.addRange(range)
+    range.setStart(e.target, 0)
+    // const selection = window.getSelection()
+    // range.collapse(true)
+    // selection?.removeAllRanges()
+    // selection?.addRange(range)
   }, 100)
 }, 700)
 const updateContent = (value: string) => {
@@ -280,33 +280,37 @@ watch(
         class="w-full min-h-40 my-2 p-2 border border-gray-800 space-x-4 items-center rounded-xl"
         :class="[{ '!border-primary': resizable || isFocused }]"
       >
-<!--        <div-->
-<!--          ref="textRef"-->
-<!--          class="border border-gray-500 p-2 rounded-lg"-->
-<!--          :contenteditable="true"-->
-<!--          @input="onChangeContent"-->
-<!--          @click.stop-->
-<!--          v-html="model.content"-->
-<!--        />-->
-        <TiptapEditorContent v-if="editorTextField" class="" :editor="editorTextField" />
+        <TiptapEditorContent
+          v-if="editorTextField"
+          class=""
+          :editor="editorTextField"
+        />
         <div class="space-x-2 mb-4 min-w-60">
           <UButton
-            :disabled="!editorTextField?.can().chain().focus().toggleBold().run()"
+            :disabled="
+              !editorTextField?.can().chain().focus().toggleBold().run()
+            "
             :color="editorTextField?.isActive('bold') ? 'primary' : 'white'"
             @click="editorTextField?.chain().focus().toggleBold().run()"
           >
             <b>B</b>
           </UButton>
           <UButton
-            :disabled="!editorTextField?.can().chain().focus().toggleItalic().run()"
+            :disabled="
+              !editorTextField?.can().chain().focus().toggleItalic().run()
+            "
             :color="editorTextField?.isActive('italic') ? 'primary' : 'white'"
             @click="editorTextField?.chain().focus().toggleItalic().run()"
           >
             <i>I</i>
           </UButton>
           <UButton
-            :disabled="!editorTextField?.can().chain().focus().toggleUnderline().run()"
-            :color="editorTextField?.isActive('underline') ? 'primary' : 'white'"
+            :disabled="
+              !editorTextField?.can().chain().focus().toggleUnderline().run()
+            "
+            :color="
+              editorTextField?.isActive('underline') ? 'primary' : 'white'
+            "
             @click="editorTextField?.chain().focus().toggleUnderline().run()"
           >
             <u>U</u>
@@ -355,6 +359,9 @@ watch(
             @click="editor?.chain().focus().toggleUnderline().run()"
           >
             <u>U</u>
+          </UButton>
+          <UButton>
+            RTL
           </UButton>
         </div>
         <div
@@ -411,8 +418,13 @@ watch(
 <style lang="scss">
 .tiptap-element {
   .tiptap {
-    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto text-center;
+    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto;
   }
+  //.tiptap {
+  //  unicode-bidi: bidi-override; direction: rtl; text-align: right;
+  //}
+  // <h2 lang="zh-hant" class="rlo">本土化 反成國際化危機</h2>
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/writing-mode
 }
 .moveable-control-box {
   .moveable-origin {

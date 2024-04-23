@@ -8,11 +8,11 @@ export default <Partial<Config>>{
     './pages/**/*.vue',
     './composables/**/*.{js,ts}',
     './plugins/**/*.{js,ts}',
-    './App.{js,ts,vue}',
     './app.{js,ts,vue}',
-    './Error.{js,ts,vue}',
     './error.{js,ts,vue}',
+    './plugins/**/*.{js,ts}',
   ],
+  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })], // https://github.com/tailwindlabs/headlessui/tree/main/packages/%40headlessui-tailwindcss
   theme: {
     extend: {
       colors: {

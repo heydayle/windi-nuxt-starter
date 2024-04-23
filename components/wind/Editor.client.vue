@@ -25,7 +25,10 @@ const emits = defineEmits([
 ])
 const editor = useEditor({
   content: props.content,
-  extensions: [TiptapStarterKit, Underline],
+  extensions: [
+    TiptapStarterKit,
+    Underline
+  ],
 })
 const refEditor = ref<HTMLElement | null>(null)
 
@@ -207,6 +210,11 @@ defineExpose({ onClickOutside })
             @click="editor?.chain().focus().toggleUnderline().run()"
           >
             <u>U</u>
+          </UButton>
+          <UButton
+            :color="editor?.isActive({ dir: 'rtl' }) ? 'primary' : 'white'"
+          >
+            <u>RTL</u>
           </UButton>
         </div>
         <div v-if="resizable" class="absolute -top-10 -right-10 z-10">
