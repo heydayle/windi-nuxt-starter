@@ -13,7 +13,7 @@ const showError = () => {
   modalStore.showError({
     title: 'Error',
     description: 'This is error popup',
-    confirmButton: 'OK',
+    confirmButton: 'Show warning popup',
     confirmAction: () => {
       modalStore.showWarning({
         title: 'Warning',
