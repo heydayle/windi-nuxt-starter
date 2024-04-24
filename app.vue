@@ -15,6 +15,6 @@ useSeoMeta({
 <template>
   <div>
     <NuxtLayout />
-    <WindDialog />
+    <WindAlertModal />
   </div>
 </template>

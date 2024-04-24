@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type IPopup, usePopupStore } from '~/stores/popup'
+import { type IModal, useModalStore } from '~/stores/modal'
+
 const ICONS = {
   success: 'pajamas:status-closed',
   error: 'pajamas:status-alert',
@@ -11,10 +12,13 @@ const COLOR = {
   warning: 'text-yellow-500',
 }
 
-const { options, isShow } = storeToRefs(usePopupStore())
-const model = computed<IPopup>(() => options.value)
+const { options, isShow } = storeToRefs(useModalStore())
+const model = computed<IModal>(() => options.value)
 const close = () => {
   isShow.value = false
+  if (typeof model.value.confirmAction === 'function') {
+    model.value.confirmAction()
+  }
 }
 </script>
 

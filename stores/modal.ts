@@ -1,23 +1,20 @@
 import { defineStore } from 'pinia'
-export interface IPopup {
+export interface IModal {
   title: string
   description: string
   confirmButton: string
   type: 'success' | 'error' | 'warning'
-  confirmFunction?: void
-  cancelAction?: void
+  confirmAction?: (props?: any) => void
 }
-interface IPopupOptions {
+interface IModalOptions {
   title: string
   description: string
   confirmButton: string
-  confirmFunction?: void
-  cancelAction?: void
+  confirmAction?: (props?: any) => void
 }
 
-export const usePopupStore = defineStore('popupStore', () => {
-  // other options...
-  const options = ref<IPopup>({
+export const useModalStore = defineStore('modalStore', () => {
+  const options = ref<IModal>({
     title: 'Title',
     description: 'Description',
     confirmButton: 'OK',
@@ -25,7 +22,7 @@ export const usePopupStore = defineStore('popupStore', () => {
   })
   const isShow = ref(false)
 
-  const showError = (popupOptions: IPopupOptions) => {
+  const showError = (popupOptions: IModalOptions) => {
     isShow.value = false
     setTimeout(() => {
       options.value = {
@@ -35,7 +32,7 @@ export const usePopupStore = defineStore('popupStore', () => {
       isShow.value = true
     }, 150)
   }
-  const showSuccess = (popupOptions: IPopupOptions) => {
+  const showSuccess = (popupOptions: IModalOptions) => {
     isShow.value = false
     setTimeout(() => {
       options.value = {
@@ -45,7 +42,7 @@ export const usePopupStore = defineStore('popupStore', () => {
       isShow.value = true
     }, 150)
   }
-  const showWarning = (popupOptions: IPopupOptions) => {
+  const showWarning = (popupOptions: IModalOptions) => {
     isShow.value = false
     setTimeout(() => {
       options.value = {
