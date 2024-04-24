@@ -67,6 +67,7 @@ watch(
         v-model="isShowForm"
         title="Register"
         backdrop-opacity="lg"
+        background-color="primary"
         @submit="
           () => {
             showSuccess()

@@ -9,20 +9,26 @@ const COLOR = {
   error: 'text-red-500',
   warning: 'text-yellow-500',
 }
-const BG_OPACITIES = {
-  'sm': 'bg-black/25',
-  'lg': 'bg-black/50',
-  'xl': 'bg-black/75',
+const BACKDROP_OPACITIES = {
+  sm: 'bg-black/25',
+  lg: 'bg-black/50',
+  xl: 'bg-black/75',
+}
+const BACKGROUND = {
+  primary: 'bg-gray-900',
+  secondary: 'bg-gray-500',
+  white: 'bg-white',
 }
 interface IProps {
-  modelValue?: boolean
-  title?: string
+  modelValue: boolean
+  title: string
   closeBtn?: boolean
   confirmBtn?: boolean
   cancelBtn?: boolean
   textConfirmBtn?: string
   textCancelBtn?: string
   backdropOpacity?: 'sm' | 'lg' | 'xl'
+  backgroundColor?: 'primary' | 'secondary' | 'white'
 }
 interface IEmits {
   (e: 'update:modelValue'): void
@@ -37,6 +43,7 @@ const props = withDefaults(defineProps<IProps>(), {
   textConfirmBtn: 'Submit',
   textCancelBtn: 'Cancel',
   backdropOpacity: 'sm',
+  backgroundColor: 'primary',
 })
 const emits = defineEmits<IEmits>()
 const close = () => {
@@ -64,13 +71,14 @@ const cancel = () => {
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <div class="fixed inset-0" :class="BG_OPACITIES[backdropOpacity]" />
+          <div
+            class="fixed inset-0"
+            :class="BACKDROP_OPACITIES[backdropOpacity]"
+          />
         </HeadlessTransitionChild>
 
         <div class="fixed inset-0 overflow-y-auto">
-          <div
-            class="flex min-h-full items-center justify-center text-center"
-          >
+          <div class="flex min-h-full items-center justify-center text-center">
             <HeadlessTransitionChild
               as="template"
               enter="duration-300 ease-out"
@@ -81,7 +89,8 @@ const cancel = () => {
               leave-to="opacity-0 scale-95"
             >
               <HeadlessDialogPanel
-                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-gray-700 text-left align-middle shadow-xl transition-all"
+                class="w-full max-w-md transform overflow-hidden rounded-2xl text-left align-middle shadow-xl transition-all"
+                :class="BACKGROUND[backgroundColor]"
               >
                 <HeadlessDialogTitle
                   as="h3"
@@ -104,7 +113,9 @@ const cancel = () => {
                 <div class="p-4">
                   <slot name="default" />
                 </div>
-                <div class="p-4 text-right space-x-2 border-t border-t-1 border-t-gray-500">
+                <div
+                  class="p-4 text-right space-x-2 border-t border-t-1 border-t-gray-500"
+                >
                   <UButton
                     variant="ghost"
                     class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium"
