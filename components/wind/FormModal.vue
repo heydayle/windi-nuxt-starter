@@ -22,7 +22,7 @@ interface IProps {
   cancelBtn?: boolean
   textConfirmBtn?: string
   textCancelBtn?: string
-  bgOpacity?: 'sm' | 'lg' | 'xl'
+  backdropOpacity?: 'sm' | 'lg' | 'xl'
 }
 interface IEmits {
   (e: 'update:modelValue'): void
@@ -36,7 +36,7 @@ const props = withDefaults(defineProps<IProps>(), {
   confirmBtn: true,
   textConfirmBtn: 'Submit',
   textCancelBtn: 'Cancel',
-  bgOpacity: 'sm',
+  backdropOpacity: 'sm',
 })
 const emits = defineEmits<IEmits>()
 const close = () => {
@@ -46,6 +46,7 @@ const submit = () => {
   emits('submit')
 }
 const cancel = () => {
+  emits('update:modelValue')
   emits('cancel')
 }
 </script>
@@ -63,7 +64,7 @@ const cancel = () => {
           leave-from="opacity-100"
           leave-to="opacity-0"
         >
-          <div class="fixed inset-0" :class="BG_OPACITIES[bgOpacity]" />
+          <div class="fixed inset-0" :class="BG_OPACITIES[backdropOpacity]" />
         </HeadlessTransitionChild>
 
         <div class="fixed inset-0 overflow-y-auto">
@@ -103,7 +104,7 @@ const cancel = () => {
                 <div class="p-4">
                   <slot name="default" />
                 </div>
-                <div class="p-4 text-right space-x-2">
+                <div class="p-4 text-right space-x-2 border-t border-t-1 border-t-gray-500">
                   <UButton
                     variant="ghost"
                     class="inline-flex justify-center rounded-md border border-transparent px-4 py-2 text-sm font-medium"

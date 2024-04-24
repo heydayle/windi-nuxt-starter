@@ -33,29 +33,46 @@ const showWarning = () => {
 
 const isShowForm = ref(false)
 const route = useRoute()
-watch(() => route.query.id, (value, oldValue, onCleanup) => {
-  if (value) {
-    isShowForm.value = true
-  }
-}, { immediate: true })
+watch(
+  () => route.query.id,
+  (value) => {
+    if (value) {
+      isShowForm.value = true
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
-  <div>
-    Alert modal
-    <div class="space-x-4">
+  <div class="flex flex-col items-center justify-center">
+    <div
+      class="from-green-500 via-indigo-500 to-green-500 animate animate-text bg-gradient-to-r bg-clip-text text-transparent"
+    >
+      Alert modal
+    </div>
+    <div class="space-x-4 mb-6 mt-4">
       <UButton color="primary" @click="showSuccess">Success</UButton>
       <UButton color="red" @click="showError">Error</UButton>
       <UButton color="yellow" @click="showWarning">Warning</UButton>
     </div>
-    Form modal
+    <div
+      class="from-green-500 via-indigo-500 to-green-500 animate animate-text bg-gradient-to-r bg-clip-text text-transparent mb-4"
+    >
+      Form modal
+    </div>
     <div>
       <UButton @click="isShowForm = !isShowForm">Open Form</UButton>
       <WindFormModal
         v-model="isShowForm"
-        bg-opacity="xl"
         title="Register"
-        @submit="() => {}"
+        backdrop-opacity="lg"
+        @submit="
+          () => {
+            showSuccess()
+            isShowForm = !isShowForm
+          }
+        "
         @cancel="() => {}"
       >
         <div class="space-y-4">
