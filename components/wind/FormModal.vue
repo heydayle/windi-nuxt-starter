@@ -21,7 +21,7 @@ const BACKGROUND = {
 }
 interface IProps {
   modelValue: boolean
-  title: string
+  title?: string
   closeBtn?: boolean
   confirmBtn?: boolean
   cancelBtn?: boolean

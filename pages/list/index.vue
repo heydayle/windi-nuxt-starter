@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Button from '../../../packages/components/button.vue'
 import { useQuery } from 'vue-query'
+import { getImage } from '~/api/modules/images'
 const VUE_QUERY_HREF = 'https://vue-query.vercel.app/'
 const API_URL = 'https://collectionapi.metmuseum.org/'
 const ENDPOINT = {
@@ -22,7 +22,7 @@ const fetchData = async () => {
     (res) => res.json(),
   )
 }
-const { data, suspense, isLoading } = useQuery('getList', fetchData)
+const { data, suspense, isLoading } = useQuery('getList', getImage)
 // await suspense()
 const collections = computed(() => data?.value.objectIDs.filter((e, index) => index < 10))
 const goDetail = (id: any) => {

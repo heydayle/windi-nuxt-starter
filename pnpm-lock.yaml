@@ -56,6 +56,9 @@ dependencies:
   orval:
     specifier: ^6.27.1
     version: 6.27.1(openapi-types@12.1.3)(typescript@5.4.3)
+  sweetalert2:
+    specifier: ^11.10.8
+    version: 11.10.8
   tailwindcss:
     specifier: ^3.4.3
     version: 3.4.3
@@ -80,6 +83,9 @@ dependencies:
   vue-sonner:
     specifier: ^1.1.2
     version: 1.1.2
+  vue-sweetalert2:
+    specifier: ^5.0.5
+    version: 5.0.5(vue@3.4.21)
   vue3-moveable:
     specifier: ^0.28.0
     version: 0.28.0
@@ -10205,6 +10211,10 @@ packages:
       - encoding
     dev: false
 
+  /sweetalert2@11.10.8:
+    resolution: {integrity: sha512-oAkYROBfXBY+4sVbQEIcN+ZxAx69lsmz5WEBwdEpyS4m59vOBNlRU5/fJpAI1MVfiDwFZiGwVzB/KBpOyfLNtg==}
+    dev: false
+
   /synckit@0.8.8:
     resolution: {integrity: sha512-HwOKAP7Wc5aRGYdKH+dw0PRRpbO841v2DENBtjnR5HFWoiNByAl7vrx3p0G/rCyYXQsrxqtX48TImFtPcIHSpQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -11197,6 +11207,15 @@ packages:
 
   /vue-sonner@1.1.2:
     resolution: {integrity: sha512-yg4f5s0a3oiiI7cNvO0Dajux1Y7s04lxww3vnQtnwQawJ3KqaKA9RIRMdI9wGTosRGIOwgYFniFRGl4+IuKPZw==}
+    dev: false
+
+  /vue-sweetalert2@5.0.5(vue@3.4.21):
+    resolution: {integrity: sha512-Q7+TjQxNwGruT2jfPaSKMz18HHWs81r4umEwlrrtOf/QL5Iwl1T+tUaNkcvKB7Rf9rYftubt7NnOMjfDMnDH3A==}
+    peerDependencies:
+      vue: '*'
+    dependencies:
+      sweetalert2: 11.10.8
+      vue: 3.4.21(typescript@5.4.3)
     dev: false
 
   /vue-virtual-scroller@2.0.0-beta.8(vue@3.4.21):

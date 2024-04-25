@@ -1,0 +1,35 @@
+.swal2-container {
+  .swal2-popup {
+    @apply p-4 rounded-2xl
+  }
+  .swal2-icon, .swal2-image {
+    @apply w-10 h-10 m-0
+  }
+  .swal2-title {
+    @apply text-left p-0 text-2xl
+  }
+  .swal2-html-container {
+    @apply text-left m-0 py-4
+  }
+  .swal2-actions {
+    @apply text-right w-full justify-end space-x-4
+  }
+  .swal2-confirm {
+    @apply bg-primary px-4 py-2 rounded-lg
+  }
+}
+.error {
+  .swal2-confirm {
+    // style
+  }
+}
+.warning {
+  .swal2-confirm {
+    // style
+  }
+}
+.success {
+  .swal2-confirm {
+    // style
+  }
+}
