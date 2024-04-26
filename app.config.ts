@@ -26,17 +26,22 @@ export default defineAppConfig({
             { type: 'link', title: 'home', to: { name: 'index', path: '/' } },
             {
               type: 'link',
-              title: 'about',
-              to: { name: 'about', path: '/about' },
-            },
-            {
-              type: 'link',
               title: 'install',
               to: { name: 'install', path: '/install' },
             },
             {
               type: 'link',
-              title: 'Editor V2',
+              title: 'form',
+              to: { name: 'form', path: '/form' },
+            },
+            {
+              type: 'link',
+              title: 'alert',
+              to: { name: 'alert', path: '/alert' },
+            },
+            {
+              type: 'link',
+              title: 'Editor',
               to: { name: 'Moving V2', path: '/moving-v2' },
             },
             {

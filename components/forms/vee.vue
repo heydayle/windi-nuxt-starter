@@ -50,7 +50,7 @@ const [phone, phoneAttrs] = defineField('phone')
         <div
           class="flex p-4 justify-between items-center text-lg font-medium leading-6 text-gray-100 border-b border-b-1 border-b-gray-500"
         >
-          <div>Title</div>
+          <div>Vee validation</div>
           <div>
             <UButton
               class="rounded-full p-1"

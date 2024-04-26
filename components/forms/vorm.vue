@@ -51,8 +51,14 @@ const { value: email, attrs: emailFieldAttrs } = register('email')
       v-model="isShowDialog"
       type="free"
       backdrop-opacity="lg"
-      class="bg-gray-900 w-1/2 m-4 text-left"
+      class="bg-gray-900 w-[420px] m-4 text-left"
     >
+      <div class="flex justify-between items-center border-b border-b-1 border-b-gray-500 p-4">
+        <h3 class="text-lg">Vorm validation</h3>
+        <div>
+          <UButton variant="ghost" color="gray" icon="mdi:close" @click="isShowDialog = !isShowDialog" />
+        </div>
+      </div>
       <form class="p-4" @submit="handleSubmit">
         <div class="space-y-4">
           <div>
