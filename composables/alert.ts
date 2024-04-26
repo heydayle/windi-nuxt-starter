@@ -16,7 +16,6 @@ export const useAlert = () => {
       title: options?.title || 'Alert',
       text: options?.text || 'text',
       confirmButtonText: options?.confirmButtonText || 'OK',
-      customClass: 'yc-alert',
     })
   }
   const showError = (options?: IAlert) => {
@@ -52,7 +51,7 @@ export const useAlert = () => {
         title: options?.title || 'Confirm',
         text: options?.text || 'text',
         confirmButtonText: options?.confirmButtonText || 'OK',
-        customClass: 'yc-alert success',
+        customClass: 'confirm',
         showCancelButton: true,
         imageUrl: '/icons/question.svg',
       })

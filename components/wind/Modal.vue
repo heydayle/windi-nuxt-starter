@@ -30,7 +30,7 @@ const close = () => {
 <template>
   <div class="fixed">
     <HeadlessTransitionRoot appear :show="modelValue" as="template">
-      <HeadlessDialog as="div" class="relative z-10">
+      <HeadlessDialog as="div" class="relative z-10" @close="close">
         <HeadlessTransitionChild
           as="template"
           enter="duration-300 ease-out"

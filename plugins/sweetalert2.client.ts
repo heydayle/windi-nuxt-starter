@@ -2,7 +2,7 @@ import Swal from 'sweetalert2'
 import type { VueAppInstance } from '@vue/devtools-kit'
 import 'sweetalert2/dist/sweetalert2.css'
 
-const options = {
+export const SweetAlertOptions = {
   reverseButtons: true,
   confirmButtonColor: '#00C16A',
   cancelButtonColor: 'transparent',
@@ -11,7 +11,6 @@ const options = {
   customClass: 'yc-alert',
   confirmButtonText: 'OK',
   cancelButtonText: 'Cancel',
-  // buttonsStyling: false,
   showCancelButton: false,
   imageUrl: '/icons/success.svg',
 }
@@ -21,6 +20,5 @@ const $swal = {
   },
 }
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.provide('swal', Swal.mixin(options))
-  nuxtApp.vueApp.use($swal, options)
+  nuxtApp.vueApp.use($swal, SweetAlertOptions)
 })
