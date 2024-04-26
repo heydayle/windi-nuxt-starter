@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // Use SSR-safe IDs for Headless UI
+
 provideHeadlessUseId(() => useId())
 import thumbnail from '/public/thumbnail.png'
 const { winduxt } = useAppConfig()

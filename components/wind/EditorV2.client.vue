@@ -4,14 +4,7 @@ import { ref } from 'vue'
 import Underline from '@tiptap/extension-underline'
 import Collaboration from '@tiptap/extension-collaboration'
 import * as Y from 'yjs'
-import {
-  useDebounce,
-  useDebounceFn,
-  useIntervalFn,
-  useScroll,
-  useVModel,
-  useWindowScroll,
-} from '@vueuse/core'
+import { useDebounceFn, useIntervalFn } from '@vueuse/core'
 useSeoMeta({
   title: 'Moving editor',
 })
@@ -56,9 +49,6 @@ const EDITOR_KEY = {
   RESIZABLE: 'resizable',
   IS_FOCUSED: 'isFocused',
 }
-const GENERAL_KEY = {
-  ACTIVE_ID: 'activeId',
-}
 const COMPONENT = {
   EDITOR: 0,
   TEXT_AREA: 1,
@@ -90,7 +80,6 @@ const startDragRotate = 0
 const throttleDragRotate = 0
 const keepRatio = false
 const snappable = true
-const scalable = true
 const bounds = {
   left: 0,
   top: 0,
@@ -187,18 +176,25 @@ const onDebounceEditingContent = useDebounceFn((component: number) => {
   emits('update:modelValue', model.value)
   switch (component) {
     case COMPONENT.EDITOR:
-      editorTextField.value?.commands?.setContent(unref(contents))
+      editorTextField.value?.commands?.setContent(unref(contents) as string)
       break
     case COMPONENT.TEXT_AREA:
-      editor.value?.commands?.setContent(unref(contentsTextField))
+      editor.value?.commands?.setContent(unref(contentsTextField) as string)
   }
+}, 700)
+
+const onChangeContent = useDebounceFn((e) => {
+  setTimeout(() => {
+    const range = document.createRange()
+    range.setStart(e.target, 0)
+  }, 100)
 }, 700)
 watch(contentsTextField, () => {
   onDebounceEditingContent(COMPONENT.TEXT_AREA)
 })
-watch(contents, () => {
-  onChangeContent()
-  onDebounceEditingContent(COMPONENT.EDITOR)
+watch(contents, async () => {
+  await onChangeContent()
+  await onDebounceEditingContent(COMPONENT.EDITOR)
   getHeightEditor()
   const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
   if (elTipTap?.offsetHeight > moveableStyle.height) {
@@ -220,7 +216,7 @@ watch(
       value < moveableStyle.height ? value : moveableStyle.height
   },
 )
-const { pause, resume, isActive } = useIntervalFn(() => {
+const { pause, resume } = useIntervalFn(() => {
   emits('update', {
     action: ACTIONS_KEY.EDITOR,
     key: EDITOR_KEY.POSITION_Y,
@@ -247,17 +243,6 @@ watch(
   },
   { immediate: true },
 )
-const onChangeContent = useDebounceFn((e) => {
-  // updateContent(e.target.innerHTML)
-  setTimeout(() => {
-    const range = document.createRange()
-    range.setStart(e.target, 0)
-    // const selection = window.getSelection()
-    // range.collapse(true)
-    // selection?.removeAllRanges()
-    // selection?.addRange(range)
-  }, 100)
-}, 700)
 const updateContent = (value: string) => {
   editor.value?.commands.setContent(value)
 }
@@ -360,9 +345,7 @@ watch(
           >
             <u>U</u>
           </UButton>
-          <UButton>
-            RTL
-          </UButton>
+          <UButton> RTL </UButton>
         </div>
         <div
           v-if="resizable"

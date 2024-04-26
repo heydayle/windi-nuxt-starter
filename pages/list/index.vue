@@ -22,9 +22,11 @@ const fetchData = async () => {
     (res) => res.json(),
   )
 }
-const { data, suspense, isLoading } = useQuery('getList', getImage)
+const { data, isLoading } = useQuery('getList', getImage)
 // await suspense()
-const collections = computed(() => data?.value.objectIDs.filter((e, index) => index < 10))
+const collections = computed(() =>
+  data?.value.objectIDs.filter((e, index) => index < 10),
+)
 const goDetail = (id: any) => {
   navigateTo('list/' + id)
 }

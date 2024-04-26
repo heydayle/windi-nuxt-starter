@@ -1,17 +1,16 @@
 import Axios, { AxiosRequestConfig } from 'axios'
-import Swal from 'sweetalert2'
 
 export const AXIOS_INSTANCE = Axios.create({
   baseURL: 'https://collectionapi.metmuseum.org',
 })
 
 export const customInstance = <T>(config: AxiosRequestConfig): Promise<T> => {
+  const nuxtApp = useNuxtApp()
   const source = Axios.CancelToken.source()
   const promise = AXIOS_INSTANCE({ ...config, cancelToken: source.token }).then(
     ({ data }) => {
-      Swal.fire({
+      nuxtApp?.$swal.fire({
         title: 'Success',
-        customClass: 'yc-alert',
       })
       return data
     },

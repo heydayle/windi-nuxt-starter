@@ -12,7 +12,6 @@ export default <Partial<Config>>{
     './error.{js,ts,vue}',
     './plugins/**/*.{js,ts}',
   ],
-  plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })], // https://github.com/tailwindlabs/headlessui/tree/main/packages/%40headlessui-tailwindcss
   theme: {
     extend: {
       colors: {
@@ -31,6 +30,7 @@ export default <Partial<Config>>{
           950: '#052e16',
         },
       },
+      // plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' })], // https://github.com/tailwindlabs/headlessui/tree/main/packages/%40headlessui-tailwindcss
       animation: {
         text: 'text-color 3s ease-in-out infinite',
         spinning: 'spin 30s linear infinite',

@@ -1,3 +1,4 @@
+import { SweetAlertOptions } from 'sweetalert2'
 interface IAlert {
   title?: string
   text?: string
@@ -6,17 +7,16 @@ interface IAlert {
   actionCancel?: () => void
 }
 interface ISweetAlert {
-  fire: (options: any, attr1?: any, attr2?: any) => any
+  fire: (options: SweetAlertOptions, attr1?: any, attr2?: any) => any
 }
 export const useAlert = () => {
-  const alert = inject<ISweetAlert>('$swal') as ISweetAlert
+  const alert = inject<ISweetAlert>('Swal') as ISweetAlert
   const show = (options?: IAlert) => {
     alert.fire({
       title: options?.title || 'Alert',
       text: options?.text || 'text',
       confirmButtonText: options?.confirmButtonText || 'OK',
       customClass: 'yc-alert',
-      buttonsStyling: false,
     })
   }
   const showError = (options?: IAlert) => {
@@ -53,7 +53,6 @@ export const useAlert = () => {
         text: options?.text || 'text',
         confirmButtonText: options?.confirmButtonText || 'OK',
         customClass: 'yc-alert success',
-        buttonsStyling: false,
         showCancelButton: true,
         imageUrl: '/icons/question.svg',
       })

@@ -61,17 +61,6 @@ const ACTIONS_KEY = {
   EDITOR: 'EDITOR_KEY',
   GENERAL: 'GENERAL_KEY',
 }
-const EDITOR_KEY = {
-  POSITION_X: 'x',
-  POSITION_Y: 'y',
-  CONTENT: 'content',
-  DRAGGABLE: 'draggable',
-  RESIZABLE: 'resizable',
-  IS_FOCUSED: 'isFocused',
-}
-const GENERAL_KEY = {
-  ACTIVE_ID: 'activeId',
-}
 const COMPONENT = {
   EDITOR: 0,
   TEXT_AREA: 1,

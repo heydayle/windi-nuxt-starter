@@ -1,7 +1,6 @@
-import type { DehydratedState, VueQueryPluginOptions } from 'vue-query'
-import { VueQueryPlugin, QueryClient, hydrate, dehydrate } from 'vue-query'
-// Nuxt 3 app aliases
-import { useState } from '#app'
+import type { VueQueryPluginOptions } from 'vue-query'
+import { VueQueryPlugin, QueryClient } from 'vue-query'
+
 
 export default defineNuxtPlugin((nuxt) => {
   // Modify your Vue Query global settings here

@@ -2,6 +2,7 @@
 import { useAlert } from '~/composables/alert'
 
 const { error, warning, success, confirm } = useAlert()
+const nuxtApp = useNuxtApp()
 const showSuccess = () => {
   success({
     text: 'This is success alert!',
@@ -13,9 +14,15 @@ const showError = () => {
   })
 }
 const showWarning = () => {
-  warning({
+  // $swal.fire({
+  //   text: 'This is warning alert!',
+  // })
+  nuxtApp.$swal.fire({
     text: 'This is warning alert!',
   })
+  // warning({
+  //   text: 'This is warning alert!',
+  // })
 }
 const showConfirm = () => {
   confirm({
