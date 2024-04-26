@@ -1,5 +1,5 @@
-import { SweetAlertOptions } from 'sweetalert2'
-interface IAlert {
+import { type SweetAlertOptions } from 'sweetalert2'
+type IAlert = SweetAlertOptions & {
   title?: string
   text?: string
   confirmButtonText?: string
@@ -7,12 +7,13 @@ interface IAlert {
   actionCancel?: () => void
 }
 interface ISweetAlert {
-  fire: (options: SweetAlertOptions, attr1?: any, attr2?: any) => any
+  fire: (options: IAlert, attr1?: any, attr2?: any) => any
 }
 export const useAlert = () => {
   const alert = inject<ISweetAlert>('Swal') as ISweetAlert
   const show = (options?: IAlert) => {
     alert.fire({
+      ...options,
       title: options?.title || 'Alert',
       text: options?.text || 'text',
       confirmButtonText: options?.confirmButtonText || 'OK',
@@ -20,6 +21,7 @@ export const useAlert = () => {
   }
   const showError = (options?: IAlert) => {
     alert.fire({
+      ...options,
       title: options?.title || 'Error',
       text: options?.text || 'text',
       confirmButtonText: options?.confirmButtonText || 'OK',
@@ -29,6 +31,7 @@ export const useAlert = () => {
   }
   const showWarning = (options?: IAlert) => {
     alert.fire({
+      ...options,
       title: options?.title || 'Warning',
       text: options?.text || 'text',
       confirmButtonText: options?.confirmButtonText || 'OK',
@@ -38,6 +41,7 @@ export const useAlert = () => {
   }
   const showSuccess = (options?: IAlert) => {
     alert.fire({
+      ...options,
       title: options?.title || 'Success',
       text: options?.text || 'text',
       confirmButtonText: options?.confirmButtonText || 'OK',
@@ -48,6 +52,7 @@ export const useAlert = () => {
   const showConfirm = (options?: IAlert) => {
     alert
       .fire({
+        ...options,
         title: options?.title || 'Confirm',
         text: options?.text || 'text',
         confirmButtonText: options?.confirmButtonText || 'OK',

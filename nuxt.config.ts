@@ -8,20 +8,16 @@ export default defineNuxtConfig({
     '/list': { prerender: true },
     '/list/**': { prerender: true },
   },
+  extends: ['@nuxt/ui-pro'],
   modules: [
-    // eslint
-    // '@nuxtjs/eslint-module',
-    // store
     '@pinia/nuxt',
-    // ui
     '@nuxt/ui',
     '@nuxtjs/tailwindcss',
     'nuxt-headlessui',
-    // svg icon
     'nuxt-svgo',
-    // locales
     '@nuxtjs/i18n',
     'nuxt-tiptap-editor',
+    '@nuxt/content',
     // https://tiptap.dev/docs/editor/api/extensions/invisible-characters
     // https://tiptap.dev/docs/editor/api/extensions/text-align
     // https://vue3datepicker.com/props/modes/
@@ -33,7 +29,6 @@ export default defineNuxtConfig({
     prefix: 'Headless',
   },
   i18n: {
-    // langDir: '~/locales/',
     locales: ['en', 'vi'],
     defaultLocale: 'en',
     detectBrowserLanguage: false,

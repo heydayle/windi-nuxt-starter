@@ -28,33 +28,25 @@ const showConfirm = () => {
     },
   })
 }
-
-const isShowForm = ref(false)
-const isShowDialog = ref(false)
-const route = useRoute()
-watch(
-  () => route.query.id,
-  (value) => {
-    if (value) {
-      isShowForm.value = true
-    }
-  },
-  { immediate: true },
-)
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center">
-    <div
-      class="from-green-500 via-indigo-500 to-green-500 animate animate-text bg-gradient-to-r bg-clip-text text-transparent"
-    >
-      Alert modal
+  <div>
+    <div class="flex flex-col items-center justify-center">
+      <div
+        class="from-green-500 via-indigo-500 to-green-500 animate animate-text bg-gradient-to-r bg-clip-text text-transparent"
+      >
+        Alert modal
+      </div>
+      <div class="space-x-4 mb-6 mt-4">
+        <UButton color="primary" @click="showSuccess">Success</UButton>
+        <UButton color="red" @click="showError">Error</UButton>
+        <UButton color="yellow" @click="showWarning">Warning</UButton>
+        <UButton color="gray" @click="showConfirm">Confirm</UButton>
+      </div>
     </div>
-    <div class="space-x-4 mb-6 mt-4">
-      <UButton color="primary" @click="showSuccess">Success</UButton>
-      <UButton color="red" @click="showError">Error</UButton>
-      <UButton color="yellow" @click="showWarning">Warning</UButton>
-      <UButton color="gray" @click="showConfirm">Confirm</UButton>
+    <div class="h-[calc(100vh-200px)] overflow-auto">
+      <ContentDoc tag="div" class="space-y-4" />
     </div>
   </div>
 </template>
