@@ -1,0 +1,8 @@
+form {
+  label {
+    @apply block mb-2
+  }
+  .yc-validate-message {
+    @apply text-red-500 mt-2
+  }
+}

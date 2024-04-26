@@ -20,9 +20,9 @@ export const useMovingEditorV2 = () => {
   const editorList = ref<IEditor[]>([
     {
       id: uuidv4(),
-      x: 760,
-      y: 50,
-      content: "<p>Hello, I'm Nuxt</p>",
+      x: 40,
+      y: 100,
+      content: '<p>Hello, I am Nuxt</p>',
       draggable: false,
       resizable: false,
       rotatable: true,
@@ -30,8 +30,8 @@ export const useMovingEditorV2 = () => {
     },
     {
       id: uuidv4(),
-      x: 1030,
-      y: 50,
+      x: 333,
+      y: 100,
       content: '<p>Double click to edit</p>',
       draggable: true,
       resizable: false,
@@ -40,8 +40,8 @@ export const useMovingEditorV2 = () => {
     },
     {
       id: uuidv4(),
-      x: 760,
-      y: 145,
+      x: 40,
+      y: 222,
       content: '<p>One click to resize</p>',
       draggable: true,
       resizable: false,
@@ -50,8 +50,8 @@ export const useMovingEditorV2 = () => {
     },
     {
       id: uuidv4(),
-      x: 1030,
-      y: 145,
+      x: 333,
+      y: 222,
       content: '<p>Click and hold to drag</p>',
       draggable: true,
       resizable: false,
@@ -67,7 +67,7 @@ export const useMovingEditorV2 = () => {
       x: getRandomInt(width.value),
       y: getRandomInt(width.value),
     }
-    const newE = {
+    const newE = reactive({
       ...position,
       id: uuidv4(),
       content: 'x: ' + position.x + ', y: ' + position.y,
@@ -75,7 +75,7 @@ export const useMovingEditorV2 = () => {
       resizable: false,
       rotatable: true,
       isFocused: false,
-    }
+    })
     get(editorList).push(newE)
   }
   const onRemoveEditor = (index: number) => {

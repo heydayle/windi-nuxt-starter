@@ -2,7 +2,9 @@
 import Moveable from 'vue3-moveable'
 import { ref } from 'vue'
 import Underline from '@tiptap/extension-underline'
-import { useIntervalFn } from '@vueuse/core'
+import Collaboration from '@tiptap/extension-collaboration'
+import * as Y from 'yjs'
+import { useDebounceFn, useIntervalFn } from '@vueuse/core'
 useSeoMeta({
   title: 'Moving editor',
 })
@@ -20,6 +22,7 @@ const props = defineProps<{
   isFocused: boolean
   index: number
   scale: number
+  modelValue: any
 }>()
 const emits = defineEmits([
   'clickOutside',
@@ -30,6 +33,8 @@ const emits = defineEmits([
   'update',
   'updatePosition',
   'update:draggable',
+  'update:modelValue',
+  'scrollToElement',
 ])
 
 const ACTIONS_KEY = {
@@ -44,23 +49,37 @@ const EDITOR_KEY = {
   RESIZABLE: 'resizable',
   IS_FOCUSED: 'isFocused',
 }
-const GENERAL_KEY = {
-  ACTIVE_ID: 'activeId',
+const COMPONENT = {
+  EDITOR: 0,
+  TEXT_AREA: 1,
 }
 
+const model = toRef(() => props.modelValue)
+const ydoc = new Y.Doc()
 const editor = useEditor({
+  extensions: [
+    TiptapStarterKit,
+    Underline,
+    Collaboration.configure({ document: ydoc, field: 'Content' }),
+  ],
   content: props.content,
-  extensions: [TiptapStarterKit, Underline],
 })
-const refEditor = ref<HTMLElement | null>(null)
+const editorTextField = useEditor({
+  extensions: [
+    TiptapStarterKit,
+    Underline,
+    Collaboration.configure({ document: ydoc, field: 'text' }),
+  ],
+  content: props.content,
+})
 
+const refEditor = ref<HTMLElement | null>(null)
 const throttleDrag = 1
 const edgeDraggable = true
 const startDragRotate = 0
 const throttleDragRotate = 0
 const keepRatio = false
 const snappable = true
-const scalable = true
 const bounds = {
   left: 0,
   top: 0,
@@ -97,10 +116,10 @@ const onResize = (e: any) => {
   e.target.style.width = `${e.width}px`
   e.target.style.height = `${e.height}px`
   e.target.style.transform = e.drag.transform
-  emits('updatePosition', {
-    value: { x: e.left, y: e.top },
-    index: props.index,
-  })
+
+  model.value.x = e.drag.left || 0
+  model.value.y = e.drag.top || 0
+  emits('update:modelValue', model.value)
   moveableStyle.height = e.height
 }
 const onRotate = (e: any) => {
@@ -149,33 +168,46 @@ const onEnableDrag = () => {
 }
 const getHeightEditor = () => {
   const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
-  editorStyle.minHeight = elTipTap?.offsetHeight
+  editorStyle.minHeight = parseInt(elTipTap?.offsetHeight || 40)
 }
 const contents = computed(() => editor.value?.getHTML())
-watch(
-  contents,
-  () => {
-    emits('update', {
-      action: ACTIONS_KEY.EDITOR,
-      key: EDITOR_KEY.CONTENT,
-      value: contents,
-      index: props.index,
-    })
-    getHeightEditor()
-    const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
-    if (elTipTap?.offsetHeight > moveableStyle.height) {
-      moveableRef.value?.request(
-        'resizable',
-        {
-          offsetWidth: elTipTap?.offsetWidth,
-          offsetHeight: elTipTap?.offsetHeight,
-        },
-        true,
-      )
-    }
-  },
-  { deep: true },
-)
+const contentsTextField = computed(() => editorTextField.value?.getHTML())
+const onDebounceEditingContent = useDebounceFn((component: number) => {
+  emits('update:modelValue', model.value)
+  switch (component) {
+    case COMPONENT.EDITOR:
+      editorTextField.value?.commands?.setContent(unref(contents) as string)
+      break
+    case COMPONENT.TEXT_AREA:
+      editor.value?.commands?.setContent(unref(contentsTextField) as string)
+  }
+}, 700)
+
+const onChangeContent = useDebounceFn((e) => {
+  setTimeout(() => {
+    const range = document.createRange()
+    range.setStart(e.target, 0)
+  }, 100)
+}, 700)
+watch(contentsTextField, () => {
+  onDebounceEditingContent(COMPONENT.TEXT_AREA)
+})
+watch(contents, async () => {
+  await onChangeContent()
+  await onDebounceEditingContent(COMPONENT.EDITOR)
+  getHeightEditor()
+  const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)
+  if (elTipTap?.offsetHeight > moveableStyle.height) {
+    moveableRef.value?.request(
+      'resizable',
+      {
+        offsetWidth: elTipTap?.offsetWidth,
+        offsetHeight: elTipTap?.offsetHeight,
+      },
+      true,
+    )
+  }
+})
 watch(
   () => editorStyle.height,
   (value) => {
@@ -184,7 +216,7 @@ watch(
       value < moveableStyle.height ? value : moveableStyle.height
   },
 )
-const { pause, resume, isActive } = useIntervalFn(() => {
+const { pause, resume } = useIntervalFn(() => {
   emits('update', {
     action: ACTIONS_KEY.EDITOR,
     key: EDITOR_KEY.POSITION_Y,
@@ -211,32 +243,66 @@ watch(
   },
   { immediate: true },
 )
-defineExpose({ onClickOutside })
+const updateContent = (value: string) => {
+  editor.value?.commands.setContent(value)
+}
+const textRef = ref(null)
+
+defineExpose({ onClickOutside, updateContent })
+
+watch(
+  () => props.activeId,
+  () => {
+    if (props.id === props.activeId) emits('scrollToElement', textRef.value)
+  },
+)
 </script>
 <template>
-  <div class="">
-    <div class="flex space-x-4 items-center">
-      <div>{{ index }}</div>
-      <UCheckbox
-        :model-value="draggable"
-        name="Draggable"
-        label="Draggable"
-        disabled
-      />,
-      <UCheckbox
-        :model-value="isFocused"
-        name="Focused"
-        label="Focused"
-        disabled
-      />,
-      <UCheckbox
-        :model-value="resizable"
-        name="Active"
-        label="Active"
-        disabled
-      />,
-      <div>{{ content }}</div>
-    </div>
+  <div v-if="editor" class="">
+    <Teleport to="#area-text-list">
+      <div
+        ref="textRef"
+        class="w-full min-h-40 my-2 p-2 border border-gray-800 space-x-4 items-center rounded-xl"
+        :class="[{ '!border-primary': resizable || isFocused }]"
+      >
+        <TiptapEditorContent
+          v-if="editorTextField"
+          class=""
+          :editor="editorTextField"
+        />
+        <div class="space-x-2 mb-4 min-w-60">
+          <UButton
+            :disabled="
+              !editorTextField?.can().chain().focus().toggleBold().run()
+            "
+            :color="editorTextField?.isActive('bold') ? 'primary' : 'white'"
+            @click="editorTextField?.chain().focus().toggleBold().run()"
+          >
+            <b>B</b>
+          </UButton>
+          <UButton
+            :disabled="
+              !editorTextField?.can().chain().focus().toggleItalic().run()
+            "
+            :color="editorTextField?.isActive('italic') ? 'primary' : 'white'"
+            @click="editorTextField?.chain().focus().toggleItalic().run()"
+          >
+            <i>I</i>
+          </UButton>
+          <UButton
+            :disabled="
+              !editorTextField?.can().chain().focus().toggleUnderline().run()
+            "
+            :color="
+              editorTextField?.isActive('underline') ? 'primary' : 'white'
+            "
+            @click="editorTextField?.chain().focus().toggleUnderline().run()"
+          >
+            <u>U</u>
+          </UButton>
+        </div>
+      </div>
+    </Teleport>
     <div ref="refEditor" class="">
       <div
         ref="targetRef"
@@ -279,6 +345,7 @@ defineExpose({ onClickOutside })
           >
             <u>U</u>
           </UButton>
+          <UButton> RTL </UButton>
         </div>
         <div
           v-if="resizable"
@@ -334,8 +401,13 @@ defineExpose({ onClickOutside })
 <style lang="scss">
 .tiptap-element {
   .tiptap {
-    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto text-center;
+    @apply px-4 py-2 active:outline-0 focus:outline-0 h-auto;
   }
+  //.tiptap {
+  //  unicode-bidi: bidi-override; direction: rtl; text-align: right;
+  //}
+  // <h2 lang="zh-hant" class="rlo">本土化 反成國際化危機</h2>
+  // https://developer.mozilla.org/en-US/docs/Web/CSS/writing-mode
 }
 .moveable-control-box {
   .moveable-origin {
