@@ -53,10 +53,17 @@ const { value: email, attrs: emailFieldAttrs } = register('email')
       backdrop-opacity="lg"
       class="bg-gray-900 w-[420px] m-4 text-left"
     >
-      <div class="flex justify-between items-center border-b border-b-1 border-b-gray-500 p-4">
+      <div
+        class="flex justify-between items-center border-b border-b-1 border-b-gray-500 p-4"
+      >
         <h3 class="text-lg">Vorm validation</h3>
         <div>
-          <UButton variant="ghost" color="gray" icon="mdi:close" @click="isShowDialog = !isShowDialog" />
+          <UButton
+            variant="ghost"
+            color="gray"
+            icon="mdi:close"
+            @click="isShowDialog = !isShowDialog"
+          />
         </div>
       </div>
       <form class="p-4" @submit="handleSubmit">
