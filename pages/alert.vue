@@ -4,22 +4,22 @@ import { useAlert } from '~/composables/alert'
 const { error, warning, success, confirm } = useAlert()
 const showSuccess = () => {
   success({
-    text: 'This is success alert!',
+    message: 'This is success alert!',
   })
 }
 const showError = () => {
   error({
-    text: 'This is error alert!',
+    message: 'This is error alert!',
   })
 }
 const showWarning = () => {
   warning({
-    text: 'This is warning alert!',
+    message: 'This is warning alert!',
   })
 }
 const showConfirm = () => {
   confirm({
-    text: 'This is confirm alert?',
+    message: 'This is confirm alert?',
     actionConfirm: () => {
       showSuccess()
     },

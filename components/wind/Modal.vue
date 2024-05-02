@@ -17,7 +17,6 @@ interface IEmits {
 }
 const props = withDefaults(defineProps<IProps>(), {
   modelValue: false,
-  fullscreen: false,
   type: 'free',
   backdropOpacity: 'sm',
 })
