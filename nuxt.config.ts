@@ -8,7 +8,10 @@ export default defineNuxtConfig({
     '/list': { prerender: true },
     '/list/**': { prerender: true },
   },
-  extends: ['@nuxt/ui-pro'],
+  features: {
+    devLogs: false
+    // or 'silent' to allow you to handle yourself with dev:ssr-logs hook
+  },
   modules: [
     '@pinia/nuxt',
     '@nuxt/ui',
@@ -17,10 +20,11 @@ export default defineNuxtConfig({
     'nuxt-svgo',
     '@nuxtjs/i18n',
     'nuxt-tiptap-editor',
-    '@nuxt/content',
+    // '@nuxt/content',
     // https://tiptap.dev/docs/editor/api/extensions/invisible-characters
     // https://tiptap.dev/docs/editor/api/extensions/text-align
     // https://vue3datepicker.com/props/modes/
+    // "@nuxt/image"
   ],
   tiptap: {
     prefix: 'Tiptap',
