@@ -25,6 +25,7 @@
     "@tiptap/extension-text": "^2.2.6",
     "@tiptap/extension-underline": "^2.2.6",
     "@vorms/core": "^1.1.0",
+    "@vorms/resolvers": "^1.1.0",
     "@vueuse/components": "^10.9.0",
     "@vueuse/core": "^10.5.0",
     "@vueuse/nuxt": "^10.5.0",

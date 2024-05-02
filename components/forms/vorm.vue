@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useForm } from '@vorms/core'
+import { yupResolver } from '@vorms/resolvers/yup'
 import { useAlert } from '~/composables/alert'
+import * as yup from 'yup'
 
 interface IUser {
   name: string
@@ -14,34 +16,47 @@ const props = defineProps<IProp>()
 const isShowDialog = ref(false)
 const { success } = useAlert()
 
+const schema = yup.object({
+  name: yup.string().required('Please enter your name!'),
+  email: yup
+    .string()
+    .email('Your email is not valid!')
+    .required('Please enter your email!'),
+  phone: yup.string().required('Please enter your phone!'),
+})
+
 const { errors, register, handleSubmit } = useForm({
+  validateMode: 'blur',
+  reValidateMode: 'input',
   initialValues: {
     ...props.modelValue,
   },
-  validate(values) {
-    const errors: Record<string, any> = {}
-
-    if (!values.name) {
-      errors.name = 'Please enter your name!'
-    }
-    if (!values.phone) {
-      errors.phone = 'Please enter your phone!'
-    }
-    if (!values.email) {
-      errors.email = 'Please enter your email!'
-    }
-
-    return errors
-  },
+  // validate() {
+  //   const errors: Record<string, any> = {}
+  //   return errors
+  // },
+  validate: yupResolver(schema),
   onSubmit(data) {
     success({
       text: JSON.stringify(data, null, 2),
     })
   },
 })
-const { value: name, attrs: nameFieldAttrs } = register('name')
-const { value: phone, attrs: phoneFieldAttrs } = register('phone')
-const { value: email, attrs: emailFieldAttrs } = register('email')
+const { value: name, attrs: nameFieldAttrs } = register('name', {
+  validate(value) {
+    return !value ? 'Please enter your name!' : undefined
+  },
+})
+const { value: phone, attrs: phoneFieldAttrs } = register('phone', {
+  validate(value) {
+    return !value ? 'Please enter your phone!' : undefined
+  },
+})
+const { value: email, attrs: emailFieldAttrs } = register('email', {
+  validate(value) {
+    return !value ? 'Please enter your email!' : undefined
+  },
+})
 </script>
 
 <template>

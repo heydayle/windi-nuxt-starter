@@ -45,8 +45,16 @@ const showConfirm = () => {
         <UButton color="gray" @click="showConfirm">Confirm</UButton>
       </div>
     </div>
-    <div class="h-[calc(100vh-200px)] overflow-auto">
-      <ContentDoc tag="div" class="space-y-4" />
+    <div class="text-center">
+      <UButton
+        variant="link"
+        to="https://github.com/heydayle/windi-nuxt-starter/blob/main/content/alert.md"
+        target="_blank"
+        >Check document here!
+        <template #trailing>
+          <UIcon name="iconamoon:link-external-fill" class="w-5 h-5" />
+        </template>
+      </UButton>
     </div>
   </div>
 </template>

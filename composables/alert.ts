@@ -3,14 +3,15 @@ type IAlert = SweetAlertOptions & {
   title?: string
   text?: string
   confirmButtonText?: string
+  customClass?: 'success' | 'error' | 'warning' | 'confirm' | string
   actionConfirm?: () => void
   actionCancel?: () => void
 }
-interface ISweetAlert {
+interface IDefaultSweetAlert {
   fire: (options: IAlert, attr1?: any, attr2?: any) => any
 }
 export const useAlert = () => {
-  const alert = inject<ISweetAlert>('Swal') as ISweetAlert
+  const alert = inject<IDefaultSweetAlert>('Swal') as IDefaultSweetAlert
   const show = (options?: IAlert) => {
     alert.fire({
       ...options,
