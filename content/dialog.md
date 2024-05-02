@@ -5,11 +5,12 @@ Description: 'Guide'
 
 ---
 ## Props
-| Props             | Type             | Default |
-|:------------------|:-----------------|:--------|
-| `v-model`         | boolean          | false   |
-| `backdropOpacity` | 'sm', 'lg', 'xl' | 'sm'    |
-| `type`            | 'free', 'layout' | 'free'  |
+| Props                             | Type             | Default |
+|:----------------------------------|:-----------------|:--------|
+| `v-model`                         | boolean          | false   |
+| `clickOutsideToClose`             | boolean          | true    |
+| `backdropOpacity`                 | 'sm', 'lg', 'xl' | 'sm'    |
+| `type`                            | 'free', 'layout' | 'free'  |
 ---
 # Usage
 `component.vue`

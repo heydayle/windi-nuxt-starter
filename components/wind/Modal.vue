@@ -9,6 +9,7 @@ const BACKDROP_OPACITIES = {
 }
 interface IProps {
   modelValue: boolean
+  clickOutsideToClose: boolean
   backdropOpacity?: 'sm' | 'lg' | 'xl'
   type?: 'free' | 'layout'
 }
@@ -17,12 +18,13 @@ interface IEmits {
 }
 const props = withDefaults(defineProps<IProps>(), {
   modelValue: false,
+  clickOutsideToClose: true,
   type: 'free',
   backdropOpacity: 'sm',
 })
 const emits = defineEmits<IEmits>()
 const close = () => {
-  emits('update:modelValue')
+  props.clickOutsideToClose && emits('update:modelValue')
 }
 </script>
 
