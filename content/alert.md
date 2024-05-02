@@ -16,28 +16,28 @@ type IAlert = SweetAlertOptions & {
   confirmButtonText?: string
   actionConfirm?: () => void
   actionCancel?: () => void
-  customClass: 'success' | 'error' | 'warning' | 'confirm'
+  customClass: 'success' | 'error' | 'warning' | 'confirm' | string
 }
 
 ```
 ## Functions
-| Functions   | Description                                                                                                 |
-|:------------|:------------------------------------------------------------------------------------------------------------|
-| `success()` | Default style alert success with your `message` & `title`                                                   |
-| `error()`   | Default style alert error with your `message` & `title`                                                     |
-| `warning()` | Default style alert warning with your `message` & `title`                                                   |
-| `confirm()` | Default style alert confirm with your _`message`_ & _`title`_ and set `action` when click confirm or cancel |
-| `show()`    | Using this function to custom alert!                                                                        |
+| Functions   | Description                                                                                             |
+|:------------|:--------------------------------------------------------------------------------------------------------|
+| `success()` | Default style alert success with your `message` & `title`                                               |
+| `error()`   | Default style alert error with your `message` & `title`                                                 |
+| `warning()` | Default style alert warning with your `message` & `title`                                               |
+| `confirm()` | Default style alert confirm with your `message` & `title` and set `action` when click confirm or cancel |
+| `show()`    | Using this function to custom alert!                                                                    |
 ## Parameters
-| Parameter           | Type                             | Default                |
-|:--------------------|:---------------------------------|:-----------------------|
-| `title`             | string                           | 'Alert'                |
-| `message`           | string                           | 'Content message'      |
-| `confirmButtonText` | string                           | 'OK'                   |
-| `actionConfirm`     | void                             | undefined              |
-| `actionCancel`      | void                             | undefined              |
-| `customClass`       | success, error, warning, confirm | 'yc-alert'             |
-| `imageUrl`          | string                           | '/icons/success.svg'   |
+| Parameter           | Type                                       | Default                |
+|:--------------------|:-------------------------------------------|:-----------------------|
+| `title`             | string                                     | 'Alert'                |
+| `message`           | string                                     | 'Content message'      |
+| `confirmButtonText` | string                                     | 'OK'                   |
+| `actionConfirm`     | void                                       | undefined              |
+| `actionCancel`      | void                                       | undefined              |
+| `customClass`       | success, error, warning, confirm or string | 'yc-alert'             |
+| `imageUrl`          | string                                     | '/icons/success.svg'   |
 
 More parameters in [here](https://github.com/sweetalert2/sweetalert2/blob/main/sweetalert2.d.ts)!
 
