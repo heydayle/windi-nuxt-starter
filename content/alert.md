@@ -16,7 +16,7 @@ type IAlert = SweetAlertOptions & {
   confirmButtonText?: string
   actionConfirm?: () => void
   actionCancel?: () => void
-  customClass: 'success' | 'error' | 'warning' | 'confirm' | string
+  customClass?: 'success' | 'error' | 'warning' | 'confirm' | string
 }
 
 ```
