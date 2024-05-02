@@ -4,6 +4,14 @@ Description: 'Guide'
 ---
 
 ---
+## Props
+| Props             | Type             | Default |
+|:------------------|:-----------------|:--------|
+| `v-model`         | boolean          | false   |
+| `backdropOpacity` | 'sm', 'lg', 'xl' | 'sm'    |
+| `type`            | 'free', 'layout' | 'free'  |
+---
+# Usage
 `component.vue`
 ```vue
 <script setup lang="ts">
@@ -59,29 +67,4 @@ Custom background and style for modal
     ...
   }
 </stlye>
-```
-
-`components/Modal.vue`
-```vue
-<script setup lang="ts">
-  
-interface IProps {
-  modelValue: boolean
-  backdropOpacity?: 'sm' | 'lg' | 'xl'
-  type?: 'free' | 'layout'
-}
-
-const props = withDefaults(defineProps<IProps>(), {
-  modelValue: false,
-  type: 'free',
-  backdropOpacity: 'sm',
-})
-
-const BACKDROP_OPACITIES = {
-  sm: 'bg-black/25',
-  lg: 'bg-black/50',
-  xl: 'bg-black/75',
-}
-
-</script>
 ```
