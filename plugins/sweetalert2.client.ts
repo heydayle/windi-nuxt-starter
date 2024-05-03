@@ -1,5 +1,4 @@
 import Swal from 'sweetalert2'
-import type { VueAppInstance } from '@vue/devtools-kit'
 import 'sweetalert2/dist/sweetalert2.css'
 
 export const SweetAlertOptions = {
@@ -15,7 +14,7 @@ export const SweetAlertOptions = {
   imageUrl: '/icons/success.svg',
 }
 const $swal = {
-  install: (Vue: VueAppInstance, options: any) => {
+  install: (Vue: any, options: any) => {
     Vue.provide('Swal', Swal.mixin(options))
   },
 }
