@@ -181,19 +181,19 @@ const onDebounceEditingContent = useDebounceFn((component: number) => {
     case COMPONENT.TEXT_AREA:
       editor.value?.commands?.setContent(unref(contentsTextField) as string)
   }
-}, 700)
+}, 100)
 
 const onChangeContent = useDebounceFn((e) => {
   setTimeout(() => {
     const range = document.createRange()
-    range.setStart(e.target, 0)
+    range?.setStart(e?.target, 0)
   }, 100)
-}, 700)
+}, 200)
 watch(contentsTextField, () => {
   onDebounceEditingContent(COMPONENT.TEXT_AREA)
 })
 watch(contents, async () => {
-  await onChangeContent()
+  // await onChangeContent()
   await onDebounceEditingContent(COMPONENT.EDITOR)
   getHeightEditor()
   const elTipTap = document.querySelector(`.tiptap-element-${props.id}`)

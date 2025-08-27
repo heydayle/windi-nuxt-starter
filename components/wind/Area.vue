@@ -144,12 +144,7 @@ const onScrollElement = (e: HTMLElement) => {
 defineExpose({ onClickOutside })
 </script>
 <template>
-  <div
-    ref="areaRef"
-    :style="{ scale: scale }"
-    class="area relative h-[calc(100vh-120px)] w-full overflow-hidden z-10"
-    @click="onClickOutside"
-  >
+  <div>
     <div class="flex mb-4">
       <UButton icon="mdi:plus" @click="createEditor"> Create </UButton>
       <UButton
@@ -165,37 +160,42 @@ defineExpose({ onClickOutside })
       >
       <UInput v-model="scale" :max="1" :min="0.1" class="ml-4 max-w-10" />
     </div>
-    <div
-      v-if="editorList.length"
-      ref="textListRef"
-      class="h-screen overflow-auto pb-[120px]"
-    >
-      <WindEditorV2
-        v-for="(editor, index) in editorList"
-        :ref="
-          (el: IEditorRef) => {
-            editorRef[index] = el
-          }
-        "
-        :key="index"
-        v-bind="{
-          ...editor,
-          activeId,
-          gravity,
-          heightArea,
-          index,
-          scale,
-        }"
-        v-model="editorList[index]"
-        @update="onUpdate"
-        @update-position="onUpdatePosition"
-        @click-outside="onClickOutside"
-        @click="onClick"
-        @dblclick="onDbClick"
-        @remove="onRemove"
-        @disabled-gravity="gravity = false"
-        @scroll-to-element="onScrollElement"
-      />
+    <div class="h-[calc(100vh-120px)] w-full overflow-auto">
+      <div
+        ref="areaRef"
+        :style="{ scale: scale }"
+        class="area relative z-10 h-[1500vh] overflow-hidden"
+        @click="onClickOutside"
+      >
+        <div v-if="editorList.length" ref="textListRef" class="pb-[120px]">
+          <WindEditorV2
+            v-for="(editor, index) in editorList"
+            :ref="
+              (el: IEditorRef) => {
+                editorRef[index] = el
+              }
+            "
+            :key="index"
+            v-bind="{
+              ...editor,
+              activeId,
+              gravity,
+              heightArea,
+              index,
+              scale,
+            }"
+            v-model="editorList[index]"
+            @update="onUpdate"
+            @update-position="onUpdatePosition"
+            @click-outside="onClickOutside"
+            @click="onClick"
+            @dblclick="onDbClick"
+            @remove="onRemove"
+            @disabled-gravity="gravity = false"
+            @scroll-to-element="onScrollElement"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
